@@ -5,8 +5,18 @@
     import { invoke } from '@tauri-apps/api/tauri';
     import { exit } from '@tauri-apps/api/process';
 
+
+    import OrangeButton from '../lib/_OrangeButton.svelte';
+
     let path = "";
     let can_launch = false;
+    let battle_eye = false;
+
+    interface LaunchGame {
+        battle_eye: boolean;
+        continue_playing: boolean;
+    }
+
     async function set_path() {
         
         const selected = await open({
@@ -42,13 +52,27 @@
 
     function launch_game() {
         
-        if (!can_launch) {
-            return;
-        }
+        let launch_game: LaunchGame = {
+            battle_eye: battle_eye,
+            continue_playing: false
+        };
 
         invoke("launch_game").then((_) => {
             exit(0);
         })
+
+    }
+
+    function continue_game() {
+
+        let launch_game: LaunchGame = {
+            battle_eye: battle_eye,
+            continue_playing: true
+        };
+
+        invoke("launch_game").then((_) => {
+            exit(0);
+        });
 
     }
 
@@ -59,14 +83,20 @@
 
     <div class="h-64"></div>
     <div class="flex flex-row items-center justify-center gap-1">
-        <input type="text" bind:value={path} placeholder="Path" class="rounded-md border px-1 w-96 bg-white outline-indigo-500" disabled/>
-        <button type="button" class="rounded border px-2 bg-white hover:bg-slate-100" on:click={set_path}>Set Path</button>
+        <input type="text" bind:value={path} placeholder="Path" class="rounded-md border px-1 w-96 bg-white outline-indigo-500 shadow" disabled/>
+        <button type="button" class="rounded border px-2 bg-white hover:bg-slate-100 shadow" on:click={set_path}>Set Path</button>
     </div>
     <div class="h-4"></div>
-    <div class="flex flex-row items-center justify-center gap-1">
+    <div class="flex flex-row items-center justify-center gap-4">
         {#if can_launch}
-            <button type="button" class="rounded border px-2 bg-orange-800 text-xl text-white hover:bg-orange-900 border-none" on:click={launch_game}>Launch Game</button>
+            <OrangeButton text={"Launch"} on:click={launch_game}/>
+            <OrangeButton text={"Continue"} on:click={continue_game}/>
         {/if}
     </div>
 
+</div>
+
+<div class="flex flex-row gap-2 absolute right-3 bottom-3 text-lg bg-neutral-900 rounded-md px-2 shadow-xl">
+    <label class="text-white" for="battle-eye">Run with Battle-Eye</label>
+    <input type="checkbox" name="battle-eye" class="w-5" bind:value={battle_eye}/>
 </div>
