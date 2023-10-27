@@ -16,7 +16,7 @@ impl InstallDir {
     pub fn new(path: String) -> InstallDir {
 
         InstallDir {
-            path: path
+            path
         }
 
     }
