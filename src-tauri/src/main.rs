@@ -1,31 +1,29 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use install_dir::InstallDir;
+use conan_launch_settings::ConanLaunchSettings;
+use launcher_settings::LauncherSettings;
 
-mod install_dir;
+mod launcher_settings;
 mod conan;
+mod conan_launch_settings;
 
 fn main() {
 
-    if let Some(install_dir) = valid_existing_install() {
-        install_dir.into_conan().launch_game();
-        return;
-    }
-
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![valid_path, launch_game])
+        .invoke_handler(tauri::generate_handler![valid_path, launch_game, get_launcher_settings])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 
 }
 
-fn valid_existing_install() -> Option<InstallDir> {
+#[tauri::command]
+fn get_launcher_settings() -> Option<LauncherSettings> {
 
-    if let Some(install_dir) = InstallDir::from_file() {
+    if let Some(launcher_settings) = LauncherSettings::from_file() {
 
-        if install_dir.valid() {
-            return Some(install_dir);
+        if launcher_settings.valid() {
+            return Some(launcher_settings);
         }
 
     }
@@ -36,7 +34,7 @@ fn valid_existing_install() -> Option<InstallDir> {
 #[tauri::command]
 fn valid_path(path: String) -> bool {
 
-    let install_dir = InstallDir::new(path);
+    let install_dir = LauncherSettings::new(path);
 
     if install_dir.valid() {
         install_dir.save();
@@ -48,10 +46,9 @@ fn valid_path(path: String) -> bool {
 }
 
 #[tauri::command]
-fn launch_game() {
+fn launch_game(launcher_settings: LauncherSettings, conan_launch_settings: ConanLaunchSettings) {
 
-    if let Some(install_dir) = InstallDir::from_file() {
-        install_dir.into_conan().launch_game();
-    }
+    launcher_settings.save();
+    launcher_settings.into_conan().launch_game(conan_launch_settings);
     
 }

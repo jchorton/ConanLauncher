@@ -7,27 +7,29 @@ use serde::{Deserialize, Serialize};
 use crate::conan::Conan;
 
 #[derive(Deserialize, Serialize)]
-pub struct InstallDir {
-    pub path: String
+pub struct LauncherSettings {
+    pub path: String,
+    pub battle_eye: bool
 }
 
-impl InstallDir {
+impl LauncherSettings {
 
-    pub fn new(path: String) -> InstallDir {
+    pub fn new(path: String) -> LauncherSettings {
 
-        InstallDir {
-            path
+        LauncherSettings {
+            path,
+            battle_eye: false
         }
 
     }
 
-    pub fn from_file() -> Option<InstallDir> {
+    pub fn from_file() -> Option<LauncherSettings> {
 
         let dirs = EmDirs::new("ConanLauncher");
-        match fs::read_to_string(dirs.get_data_dir_path("install_location.json")) {
+        match fs::read_to_string(dirs.get_data_dir_path("settings.json")) {
 
             Ok(contents) => {
-                let install_dir: InstallDir = serde_json::from_str(&contents).unwrap();
+                let install_dir: LauncherSettings = serde_json::from_str(&contents).unwrap();
                 return Some(install_dir);
             },
             Err(_) =>{
@@ -55,7 +57,7 @@ impl InstallDir {
     pub fn save(&self) {
 
         let dirs = EmDirs::new("ConanLauncher");
-        fs::write(dirs.get_data_dir_path("install_location.json"), serde_json::to_string(&self).unwrap()).unwrap();
+        fs::write(dirs.get_data_dir_path("settings.json"), serde_json::to_string(&self).unwrap()).unwrap();
 
     }
 

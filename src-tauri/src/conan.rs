@@ -1,10 +1,12 @@
 use std::{fs, process::Command};
 
+use crate::conan_launch_settings::ConanLaunchSettings;
+
 
 pub struct Conan {
     pub ini_dir: String,
     pub launcher_dir: String,
-    pub working_path: String
+    pub working_path: String,
 }
 
 impl Conan {
@@ -14,7 +16,7 @@ impl Conan {
         Conan {
             ini_dir: format!("{}/ConanSandbox/Config", working_path),
             launcher_dir: format!("{}/Launcher", working_path),
-            working_path: working_path
+            working_path
         }
 
     }
@@ -66,7 +68,7 @@ impl Conan {
 
     }
 
-    pub fn launch_game(&self) {
+    pub fn launch_game(&self, launch_settings: ConanLaunchSettings) {
 
         let ini_contents = self.get_ini_file();
         if self.ini_file_not_modified(&ini_contents) {

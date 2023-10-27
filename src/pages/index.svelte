@@ -3,16 +3,21 @@
     import Background from '../assets/Background.png'
     import { open } from '@tauri-apps/api/dialog';
     import { invoke } from '@tauri-apps/api/tauri';
-    import { exit } from '@tauri-apps/api/process';
+    import { appWindow } from '@tauri-apps/api/window';
 
+    import { launcher_settings } from '../lib/store';
 
     import OrangeButton from '../lib/_OrangeButton.svelte';
 
-    let path = "";
     let can_launch = false;
-    let battle_eye = false;
+    let battle_eye = $launcher_settings?.battle_eye ?? false;
+    let path: string = $launcher_settings?.path ?? "";
 
-    interface LaunchGame {
+    if ($launcher_settings != undefined) {
+        can_launch = true;
+    }
+
+    interface ConanLaunchSettings {
         battle_eye: boolean;
         continue_playing: boolean;
     }
@@ -50,29 +55,33 @@
 
     }
 
+    function launch(conan_launch_settings: ConanLaunchSettings) {
+
+        invoke("launch_game", { launcherSettings: $launcher_settings, conanLaunchSettings: conan_launch_settings }).then((_) => {
+            appWindow.minimize();
+        })
+
+    }
+
     function launch_game() {
         
-        let launch_game: LaunchGame = {
+        let conan_launch_settings: ConanLaunchSettings = {
             battle_eye: battle_eye,
             continue_playing: false
         };
 
-        invoke("launch_game").then((_) => {
-            exit(0);
-        })
+        launch(conan_launch_settings);
 
     }
 
     function continue_game() {
 
-        let launch_game: LaunchGame = {
+        let conan_launch_settings: ConanLaunchSettings = {
             battle_eye: battle_eye,
             continue_playing: true
         };
 
-        invoke("launch_game").then((_) => {
-            exit(0);
-        });
+        launch(conan_launch_settings);
 
     }
 
