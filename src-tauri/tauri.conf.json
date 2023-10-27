@@ -78,7 +78,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "conan.EmmaLabs.com",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -107,7 +107,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": false,
-        "title": "Conan Exiles Launcher",
+        "title": "Conan Exiles Launcher - EmmaLabs",
         "width": 800
       }
     ]
