@@ -6,6 +6,8 @@ use crate::conan_launch_settings::ConanLaunchSettings;
 pub struct Conan {
     pub ini_dir: String,
     pub launcher_dir: String,
+    pub battle_eye_exe: String,
+    pub regular_exe: String,
     pub working_path: String,
 }
 
@@ -16,6 +18,8 @@ impl Conan {
         Conan {
             ini_dir: format!("{}/ConanSandbox/Config", working_path),
             launcher_dir: format!("{}/Launcher", working_path),
+            battle_eye_exe: format!("{}/ConanSandbox/Binaries/Win64/ConanSandbox_BE.exe", working_path),
+            regular_exe: format!("{}/ConanSandbox/Binaries/Win64/ConanSandbox.exe", working_path),
             working_path
         }
 
@@ -75,9 +79,39 @@ impl Conan {
             self.modify_file(ini_contents);
         }
 
-        Command::new(self.launcher_path("FuncomLauncher.exe"))
-            .spawn()
-            .expect("Failed to launch game!");
+        if launch_settings.battle_eye {
+
+            Command::new(&self.battle_eye_exe)
+                .current_dir(self.working_path.clone())
+                .args(self.get_args(&launch_settings))
+                .spawn()
+                .expect("Failed to launch game!");
+
+        } else {
+
+            Command::new(&self.regular_exe)
+                .current_dir(self.working_path.clone())
+                .args(self.get_args(&launch_settings))
+                .spawn()
+                .expect("Failed to launch game!");
+
+        }
+
+    }
+
+    fn get_args(&self, launch_settings: &ConanLaunchSettings) -> Vec<&str> {
+
+        let mut starter_settings = if launch_settings.battle_eye {
+            vec!["-BattleEye"]
+        } else {
+            vec![]
+        };
+
+        if launch_settings.continue_playing {
+            starter_settings.push("-continuesession");
+        }
+
+        starter_settings
 
     }
 
