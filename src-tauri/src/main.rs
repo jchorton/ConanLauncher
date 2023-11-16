@@ -6,12 +6,22 @@ use launcher_settings::LauncherSettings;
 
 mod launcher_settings;
 mod conan;
+mod conan_hook;
 mod conan_launch_settings;
+
+#[macro_use]
+extern crate lazy_static;
 
 fn main() {
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![valid_path, launch_game, get_launcher_settings])
+        .invoke_handler(tauri::generate_handler![
+            valid_path,
+            launch_game, 
+            get_launcher_settings, 
+            conan_hook::start_typing_loop,
+            conan_hook::submit_actual_post
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 

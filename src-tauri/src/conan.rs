@@ -1,6 +1,6 @@
-use std::{fs, process::Command};
+use std::{fs, process::{Command, Child}};
 
-use crate::conan_launch_settings::ConanLaunchSettings;
+use crate::{conan_launch_settings::ConanLaunchSettings, conan_hook::hook_into_process};
 
 
 pub struct Conan {
@@ -79,13 +79,13 @@ impl Conan {
             self.modify_file(ini_contents);
         }
 
-        if launch_settings.battle_eye {
+        let child = if launch_settings.battle_eye {
 
             Command::new(&self.battle_eye_exe)
                 .current_dir(self.working_path.clone())
                 .args(self.get_args(&launch_settings))
                 .spawn()
-                .expect("Failed to launch game!");
+                .expect("Failed to launch game!")
 
         } else {
 
@@ -93,9 +93,10 @@ impl Conan {
                 .current_dir(self.working_path.clone())
                 .args(self.get_args(&launch_settings))
                 .spawn()
-                .expect("Failed to launch game!");
+                .expect("Failed to launch game!")
 
-        }
+        };
+        hook_into_process(child);
 
     }
 
