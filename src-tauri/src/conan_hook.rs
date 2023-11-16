@@ -81,13 +81,14 @@ pub fn hook_into_existing() {
 
 }
 
-fn post_message(msg_type: u32, wparam: WPARAM) {
+fn post_message(msg_type: u32, wparam: WPARAM, millis: u64) {
 
     if let Some(hwnd) = CONAN_SANDBOX_HWND.lock().unwrap().as_ref() {
 
         unsafe {
             let _ = PostMessageA(*hwnd, msg_type, wparam, LPARAM(0));
         }
+        thread::sleep(Duration::from_millis(millis));
 
     }
 
@@ -95,21 +96,14 @@ fn post_message(msg_type: u32, wparam: WPARAM) {
 
 fn typing_loop() {
 
-    post_message(WM_KEYDOWN, WPARAM(ESC_KEY));
-    thread::sleep(Duration::from_millis(250));
-
-    post_message(WM_KEYDOWN, WPARAM(ESC_KEY));
-    thread::sleep(Duration::from_millis(250));
-
-    post_message(WM_KEYDOWN, WPARAM(ENTER_KEY));
+    post_message(WM_KEYDOWN, WPARAM(ESC_KEY), 250);
+    post_message(WM_KEYDOWN, WPARAM(ESC_KEY), 250);
+    post_message(WM_KEYDOWN, WPARAM(ENTER_KEY), 100);
 
     while TYPING_LOOP_ACTIVE.load(Ordering::Relaxed) {
 
-        post_message(WM_KEYDOWN, WPARAM(0x61));
-        thread::sleep(Duration::from_millis(500));
-
-        post_message(WM_KEYDOWN, WPARAM(BACKSPACE_KEY));
-        thread::sleep(Duration::from_millis(500));
+        post_message(WM_KEYDOWN, WPARAM(0x61), 500);
+        post_message(WM_KEYDOWN, WPARAM(BACKSPACE_KEY), 500);
 
     }
 
@@ -123,7 +117,7 @@ pub fn submit_actual_post(post: String) {
 
     let post = post.replace("ChatGPT", "");
     for c in post.chars() {
-        post_message(WM_KEYDOWN, WPARAM(c as usize));
+        post_message(WM_KEYDOWN, WPARAM(c as usize), 5);
     }
 
 }
