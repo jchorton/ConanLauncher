@@ -1,6 +1,7 @@
 
 <script lang="ts">
     import Background from '../assets/Background.png'
+    import { goto } from '@roxi/routify';
     import { open } from '@tauri-apps/api/dialog';
     import { invoke } from '@tauri-apps/api/tauri';
     import { appWindow } from '@tauri-apps/api/window';
@@ -84,6 +85,22 @@
         launch(conan_launch_settings);
 
     }
+
+    function check_for_hook() {
+
+        invoke("is_hooked_in").then((hooked: any) => {
+
+            console.log(hooked);
+            let t_hooked = hooked as boolean;
+            if (t_hooked) {
+                $goto("/chat");
+            }
+
+        });
+
+    }
+
+    check_for_hook();
 
 </script>
 
