@@ -19,6 +19,10 @@ lazy_static! {
     static ref TYPING_JOIN_HANDLE: Arc<Mutex<Option<JoinHandle<()>>>> = Arc::new(Mutex::new(None));
 }
 
+const ENTER_KEY: usize = 0x0D;
+const ESC_KEY: usize = 0x1B;
+const BACKSPACE_KEY: usize = 0x08;
+
 unsafe extern "system" fn enum_windows_proc(hwnd: HWND, param1: LPARAM) -> BOOL {
 
     let mut process_id: u32 = 0;
@@ -91,12 +95,20 @@ fn post_message(msg_type: u32, wparam: WPARAM) {
 
 fn typing_loop() {
 
+    post_message(WM_KEYDOWN, WPARAM(ESC_KEY));
+    thread::sleep(Duration::from_millis(250));
+
+    post_message(WM_KEYDOWN, WPARAM(ESC_KEY));
+    thread::sleep(Duration::from_millis(250));
+
+    post_message(WM_KEYDOWN, WPARAM(ENTER_KEY));
+
     while TYPING_LOOP_ACTIVE.load(Ordering::Relaxed) {
 
         post_message(WM_KEYDOWN, WPARAM(0x61));
         thread::sleep(Duration::from_millis(500));
-        
-        post_message(WM_KEYDOWN, WPARAM(0x08));
+
+        post_message(WM_KEYDOWN, WPARAM(BACKSPACE_KEY));
         thread::sleep(Duration::from_millis(500));
 
     }
