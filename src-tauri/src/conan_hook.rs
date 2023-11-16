@@ -8,8 +8,8 @@ use windows::Win32::Foundation::{HWND, LPARAM, BOOL, WPARAM};
 use windows::Win32::UI::WindowsAndMessaging::{
     EnumWindows, 
     GetWindowThreadProcessId,
-    GetWindowTextW, 
-    PostMessageA, 
+    GetWindowTextW,
+    PostMessageW,
     WM_KEYDOWN,
     WM_CHAR
 };
@@ -87,7 +87,7 @@ fn post_message(msg_type: u32, wparam: WPARAM, millis: u64) {
     if let Some(hwnd) = CONAN_SANDBOX_HWND.lock().unwrap().as_ref() {
 
         unsafe {
-            let _ = PostMessageA(*hwnd, msg_type, wparam, LPARAM(0));
+            let _ = PostMessageW(*hwnd, msg_type, wparam, LPARAM(0));
         }
         thread::sleep(Duration::from_millis(millis));
 
