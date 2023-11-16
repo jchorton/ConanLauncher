@@ -10,7 +10,8 @@ use windows::Win32::UI::WindowsAndMessaging::{
     GetWindowThreadProcessId,
     GetWindowTextW, 
     PostMessageA, 
-    WM_KEYDOWN
+    WM_KEYDOWN,
+    WM_CHAR
 };
 
 lazy_static! {
@@ -102,7 +103,7 @@ fn typing_loop() {
 
     while TYPING_LOOP_ACTIVE.load(Ordering::Relaxed) {
 
-        post_message(WM_KEYDOWN, WPARAM(0x61), 500);
+        post_message(WM_CHAR, WPARAM(0x61), 500);
         post_message(WM_KEYDOWN, WPARAM(BACKSPACE_KEY), 500);
 
     }
@@ -117,8 +118,9 @@ pub fn submit_actual_post(post: String) {
 
     let post = post.replace("ChatGPT", "");
     for c in post.chars() {
-        post_message(WM_KEYDOWN, WPARAM(c as usize), 5);
+        post_message(WM_CHAR, WPARAM(c as usize), 5);
     }
+    post_message(WM_KEYDOWN, WPARAM(ENTER_KEY), 0);
 
 }
 
