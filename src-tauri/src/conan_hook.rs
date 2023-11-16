@@ -102,11 +102,16 @@ fn typing_loop() {
     post_message(WM_KEYDOWN, WPARAM(ESC_KEY), 250);
     post_message(WM_KEYDOWN, WPARAM(ENTER_KEY), 100);
 
+    post_message(WM_CHAR, WPARAM(A_KEY), 250);
     while TYPING_LOOP_ACTIVE.load(Ordering::Relaxed) {
 
         post_message(WM_CHAR, WPARAM(A_KEY), 500);
-        post_message(WM_KEYDOWN, WPARAM(BACKSPACE_KEY), 500);
+        post_message(WM_KEYDOWN, WPARAM(BACKSPACE_KEY), 250);
 
+    }
+    
+    for _i in 0..20 {
+        post_message(WM_KEYDOWN, WPARAM(BACKSPACE_KEY), 5);
     }
 
 }
@@ -119,7 +124,7 @@ pub fn submit_actual_post(post: String) {
 
     let post = post.replace("ChatGPT", "");
     for c in post.chars() {
-        post_message(WM_CHAR, WPARAM(c as usize), 5);
+        post_message(WM_CHAR, WPARAM(c as usize), 4);
     }
     post_message(WM_KEYDOWN, WPARAM(ENTER_KEY), 0);
 

@@ -19,6 +19,7 @@
 
     function on_confirm() {
 
+        show_confirmation = false;
         invoke("force_stop_loop").then(() => {
 
             text_looping = false;
