@@ -1,4 +1,3 @@
-use std::ffi::CString;
 use std::process::Child;
 use std::sync::{Mutex, Arc};
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -9,7 +8,9 @@ use windows::Win32::Foundation::{HWND, LPARAM, BOOL, WPARAM};
 use windows::Win32::UI::WindowsAndMessaging::{
     EnumWindows, 
     GetWindowThreadProcessId,
-    GetWindowTextW, SendMessageA, PostMessageA, WM_KEYDOWN
+    GetWindowTextW, 
+    PostMessageA, 
+    WM_KEYDOWN
 };
 
 lazy_static! {
@@ -62,19 +63,15 @@ pub fn hook_into_process(child: Child) {
 
 }
 
-pub fn hook_into_existing() -> bool {
+pub fn hook_into_existing() {
 
     unsafe {
             
         match EnumWindows(Some(enum_windows_existing_proc), LPARAM(0)) {
-            Ok(_) => {
-                true
-            },
-            Err(_) => {
-                false
-            }
+            Ok(_) => {},
+            Err(_) => {}
         }
-    
+        
     }
 
 }
@@ -104,9 +101,10 @@ fn typing_loop() {
 
 }
 
-
 #[tauri::command]
 pub fn submit_actual_post(post: String) {
+
+    TYPING_LOOP_ACTIVE.store(false, Ordering::Relaxed);
 
     let post = post.replace("ChatGPT", "");
     for c in post.chars() {
@@ -124,5 +122,12 @@ pub fn start_typing_loop() {
 
     TYPING_LOOP_ACTIVE.store(true, Ordering::Relaxed);
     thread::spawn(typing_loop);
+
+}
+
+#[tauri::command]
+pub fn is_hooked_in() -> bool {
+
+    CONAN_SANDBOX_HWND.lock().unwrap().is_some()
 
 }
