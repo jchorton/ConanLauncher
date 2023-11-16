@@ -1,4 +1,5 @@
-use std::{fs, process::{Command, Child}};
+use std::fs;
+use std::process::Command;
 
 use crate::{conan_launch_settings::ConanLaunchSettings, conan_hook::hook_into_process};
 

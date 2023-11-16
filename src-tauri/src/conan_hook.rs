@@ -23,6 +23,7 @@ lazy_static! {
 const ENTER_KEY: usize = 0x0D;
 const ESC_KEY: usize = 0x1B;
 const BACKSPACE_KEY: usize = 0x08;
+const A_KEY: usize = 0x41;
 
 unsafe extern "system" fn enum_windows_proc(hwnd: HWND, param1: LPARAM) -> BOOL {
 
@@ -103,7 +104,7 @@ fn typing_loop() {
 
     while TYPING_LOOP_ACTIVE.load(Ordering::Relaxed) {
 
-        post_message(WM_CHAR, WPARAM(0x61), 500);
+        post_message(WM_CHAR, WPARAM(A_KEY), 500);
         post_message(WM_KEYDOWN, WPARAM(BACKSPACE_KEY), 500);
 
     }
