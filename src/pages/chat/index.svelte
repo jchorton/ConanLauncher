@@ -3,13 +3,21 @@
 <script lang="ts">
 
     import { invoke } from '@tauri-apps/api';
+    import { fly } from 'svelte/transition';
     import Background from '../../assets/Background.png'
     import OrangeButton from '../../lib/_OrangeButton.svelte';
 
     let text = "";
     let text_looping: boolean = false;
+    let show_confirmation: boolean = false;
 
     function on_submit() {
+
+        show_confirmation = true;
+
+    }
+
+    function on_confirm() {
 
         invoke("force_stop_loop").then(() => {
 
@@ -62,4 +70,16 @@
         <OrangeButton text="Stop" on:click={on_stop} />
         <OrangeButton text="Submit" on:click={on_submit}/>
     </div>
+
+    {#if show_confirmation}
+        <div class="absolute container z-20 bg-amber-900 w-64 h-32 rounded-lg" transition:fly|local="{{ y: -500 }}">
+            <div class="h-10"></div>
+            <div class="text-center text-white text-lg">Are you sure?</div>
+            <div class="flex flex-row items-center justify-center gap-2 w-full">
+                <OrangeButton text="Yes" on:click={on_confirm}/>
+                <OrangeButton text="No" on:click={() => { show_confirmation = false; }}/>
+            </div>
+        </div>
+    {/if}
+
 </div>
