@@ -1,7 +1,7 @@
 use std::process::Child;
 use std::sync::{Mutex, Arc};
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::thread;
+use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
 use windows::Win32::Foundation::{HWND, LPARAM, BOOL, WPARAM};
@@ -16,6 +16,7 @@ use windows::Win32::UI::WindowsAndMessaging::{
 lazy_static! {
     static ref TYPING_LOOP_ACTIVE: AtomicBool = AtomicBool::new(false);
     static ref CONAN_SANDBOX_HWND: Arc<Mutex<Option<HWND>>> = Arc::new(Mutex::new(None));
+    static ref TYPING_JOIN_HANDLE: Arc<Mutex<Option<JoinHandle<()>>>> = Arc::new(Mutex::new(None));
 }
 
 unsafe extern "system" fn enum_windows_proc(hwnd: HWND, param1: LPARAM) -> BOOL {
@@ -92,8 +93,9 @@ fn typing_loop() {
 
     while TYPING_LOOP_ACTIVE.load(Ordering::Relaxed) {
 
-        post_message(WM_KEYDOWN, WPARAM('a' as usize));
+        post_message(WM_KEYDOWN, WPARAM(0x61));
         thread::sleep(Duration::from_millis(500));
+        
         post_message(WM_KEYDOWN, WPARAM(0x08));
         thread::sleep(Duration::from_millis(500));
 
@@ -105,6 +107,7 @@ fn typing_loop() {
 pub fn submit_actual_post(post: String) {
 
     TYPING_LOOP_ACTIVE.store(false, Ordering::Relaxed);
+    TYPING_JOIN_HANDLE.lock().unwrap().take().map(|handle| handle.join());
 
     let post = post.replace("ChatGPT", "");
     for c in post.chars() {
@@ -116,12 +119,32 @@ pub fn submit_actual_post(post: String) {
 #[tauri::command]
 pub fn start_typing_loop() {
 
+    #[cfg(debug_assertions)] {
+        println!("Checking if typing loop is active");
+    }
+
     if TYPING_LOOP_ACTIVE.load(Ordering::Relaxed) {
         return;
     }
 
+    #[cfg(debug_assertions)] {
+        println!("Starting typing loop");
+    }
+
     TYPING_LOOP_ACTIVE.store(true, Ordering::Relaxed);
-    thread::spawn(typing_loop);
+    TYPING_JOIN_HANDLE.lock().unwrap().replace(thread::spawn(typing_loop));
+
+}
+
+#[tauri::command]
+pub fn force_stop_loop() {
+    
+    if !TYPING_LOOP_ACTIVE.load(Ordering::Relaxed) {
+        return;
+    }
+
+    TYPING_LOOP_ACTIVE.store(false, Ordering::Relaxed);
+    TYPING_JOIN_HANDLE.lock().unwrap().take().map(|handle| handle.join());
 
 }
 

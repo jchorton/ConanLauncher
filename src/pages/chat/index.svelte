@@ -15,10 +15,15 @@
 
     function on_reset() {
 
+
+        invoke("force_stop_loop").then(() => {
+            invoke("start_typing_loop").then(() => {});
+        });
+
     }
 
     function on_stop() {
-
+        invoke("force_stop_loop").then(() => {});
     }
 
     function on_input() {

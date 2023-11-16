@@ -23,7 +23,8 @@ fn main() {
             get_launcher_settings, 
             conan_hook::start_typing_loop,
             conan_hook::submit_actual_post,
-            conan_hook::is_hooked_in
+            conan_hook::is_hooked_in,
+            conan_hook::force_stop_loop
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
