@@ -59,7 +59,7 @@
     function launch(conan_launch_settings: ConanLaunchSettings) {
 
         invoke("launch_game", { launcherSettings: $launcher_settings, conanLaunchSettings: conan_launch_settings }).then((_) => {
-            appWindow.minimize();
+            $goto("/chat");
         })
 
     }
