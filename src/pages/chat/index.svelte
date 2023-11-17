@@ -12,9 +12,7 @@
     let show_confirmation: boolean = false;
 
     function on_submit() {
-
         show_confirmation = true;
-
     }
 
     function on_confirm() {
@@ -28,6 +26,13 @@
             });
 
         });
+
+    }
+
+    function on_cut() {
+
+        window.navigator.clipboard.writeText(text);
+        text = "";
 
     }
 
@@ -69,9 +74,9 @@
     <div class="flex flex-row gap-2">
         <OrangeButton text="Reset" on:click={on_reset}/>
         <OrangeButton text="Stop" on:click={on_stop} />
+        <OrangeButton text="Cut" on:click={on_cut} />
         <OrangeButton text="Submit" on:click={on_submit}/>
     </div>
-
     {#if show_confirmation}
         <div class="absolute container z-20 bg-amber-900 w-64 h-32 rounded-lg" transition:fly|local="{{ y: -500 }}">
             <div class="h-10"></div>
