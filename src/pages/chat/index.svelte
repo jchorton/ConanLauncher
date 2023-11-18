@@ -112,7 +112,7 @@
 <div class="absolute container w-full h-full z-10 flex flex-col justify-center items-center">
     <CharacterDropDown/>
     <div class="h-2"></div>
-    <div class="grid grid-cols-5 gap-4">
+    <div class="grid grid-cols-5 gap-4 w-full">
         <div class="col-span-3">
             <textarea class="w-full h-80 p-1 outline-none rounded-lg shadow-2xl border-orange-900 border-4" bind:value={text} on:input={on_input}></textarea>
         </div>
