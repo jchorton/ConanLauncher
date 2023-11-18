@@ -8,8 +8,9 @@
     import { hooked_in } from '../../lib/network';
     import OrangeButton from '../../lib/_OrangeButton.svelte';
     import { goto } from '@roxi/routify';
+    import CharacterDropDown from './_CharacterDropDown.svelte';
+    import { character_id } from './chat_store';
 
-    let text_area: HTMLTextAreaElement;
     let text = "";
     let text_looping: boolean = false;
     let show_confirmation: boolean = false;
@@ -26,7 +27,13 @@
         invoke("force_stop_loop").then(() => {
 
             text_looping = false;
-            invoke("submit_actual_post", { post: text }).then(() => {
+
+            let payload = {
+                character_id: $character_id,
+                message: text
+            };
+
+            invoke("submit_actual_post", { characterMessage: payload }).then(() => {
                 text = "";
             });
 
@@ -84,7 +91,9 @@
     <OrangeButton text="Back" on:click={on_back} />
 </div>
 <div class="absolute container w-full h-full z-10 flex flex-col justify-center items-center">
-    <textarea class="w-full h-80 ml-6 p-1 outline-none rounded-lg shadow-2xl border-orange-900 border-4" bind:this={text_area} bind:value={text} on:input={on_input}></textarea>
+    <CharacterDropDown/>
+    <div class="h-2"></div>
+    <textarea class="w-full h-80 ml-6 p-1 outline-none rounded-lg shadow-2xl border-orange-900 border-4" bind:value={text} on:input={on_input}></textarea>
     <div class="text-white text-2xl ml-auto">{text.length}/{MAX_CHARACTERS_PER_POST}</div>
     <div class="h-4"></div>
     <div class="flex flex-row gap-2">

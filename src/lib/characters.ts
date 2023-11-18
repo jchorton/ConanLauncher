@@ -4,7 +4,7 @@ import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
 
 export interface ICharacter {
-    characterId: number;
+    character_id: number;
     name: string;
     description?: string;
     image?: string;

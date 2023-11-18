@@ -3,32 +3,41 @@ use rusqlite::{params, Connection, Result};
 use serde::{Deserialize, Serialize};
 use chrono::NaiveDateTime;
 
-#[derive(Debug, Serialize, Deserialize)]
-struct CharacterMessage {
+use crate::database;
 
-    character_message_id: i32,
-    create_time: NaiveDateTime,
-    character_id: i32,
-    message: String,
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CharacterMessage {
+
+    pub character_message_id: i32,
+    pub create_time: NaiveDateTime,
+    pub character_id: i32,
+    pub message: String,
     
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct NewCharacterMessage {
+pub struct NewCharacterMessage {
 
-    character_id: i32,
-    message: String,
+    pub character_id: i32,
+    pub message: String,
 
 }
 
 impl NewCharacterMessage {
 
-    fn insert(&self, conn: &Connection) -> Result<()> {
+    pub fn insert(&self, conn: &Connection) -> Result<()> {
         conn.execute(
             "INSERT INTO CharacterMessages (CharacterId, Message) VALUES (?1, ?2)",
             params![self.character_id, self.message],
         )?;
         Ok(())
+    }
+
+    pub fn insert_new_db(&self) -> Result<()> {
+
+        let conn = database::connection()?;
+        self.insert(&conn)
+        
     }
 
 }

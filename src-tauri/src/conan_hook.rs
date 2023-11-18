@@ -15,6 +15,8 @@ use windows::Win32::UI::WindowsAndMessaging::{
     WM_CHAR
 };
 
+use crate::database::character_message::{NewCharacterMessage, self};
+
 lazy_static! {
     static ref TYPING_LOOP_ACTIVE: AtomicBool = AtomicBool::new(false);
     static ref CONAN_SANDBOX_HWND: Arc<Mutex<Option<HWND>>> = Arc::new(Mutex::new(None));
@@ -123,12 +125,15 @@ fn typing_loop() {
 }
 
 #[tauri::command]
-pub fn submit_actual_post(post: String) {
+pub fn submit_actual_post(character_message: NewCharacterMessage) {
 
     TYPING_LOOP_ACTIVE.store(false, Ordering::Relaxed);
     TYPING_JOIN_HANDLE.lock().unwrap().take().map(|handle| handle.join());
 
-    let post = post.replace("ChatGPT", "");
+    character_message.insert_new_db().unwrap();
+
+    let post = character_message.message.replace("ChatGPT", "");
+    
     for c in post.chars() {
 
         if c == '\n' {
