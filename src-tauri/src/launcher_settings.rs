@@ -5,6 +5,7 @@ use em_libs::dal::em_dirs::EmDirs;
 use serde::{Deserialize, Serialize};
 
 use crate::conan::Conan;
+use crate::utils;
 
 #[derive(Deserialize, Serialize)]
 pub struct LauncherSettings {
@@ -25,7 +26,7 @@ impl LauncherSettings {
 
     pub fn from_file() -> Option<LauncherSettings> {
 
-        let dirs = EmDirs::new("ConanLauncher");
+        let dirs = utils::get_em_dirs();
         match fs::read_to_string(dirs.get_data_dir_path("settings.json")) {
 
             Ok(contents) => {

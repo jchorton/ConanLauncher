@@ -20,6 +20,7 @@ serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.5.2", features = [ "window-close", "window-set-minimizable", "window-minimize", "process-exit", "dialog-message", "dialog-open", "fs-read-dir"] }
 lazy_static = "1.4.0"
+rusqlite = { version = "0.30", features = [ "bundled" ] }
 
 windows = { version = "0.52", features = ["Data_Xml_Dom", "Win32_Foundation", "Win32_Security", "Win32_System_Threading", "Win32_UI_WindowsAndMessaging", "Win32_UI_Input_KeyboardAndMouse"] }
 

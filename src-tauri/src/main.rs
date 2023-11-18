@@ -8,12 +8,16 @@ mod launcher_settings;
 mod conan;
 mod conan_hook;
 mod conan_launch_settings;
+mod database;
+mod utils;
 
 #[macro_use]
 extern crate lazy_static;
 
 fn main() {
     
+    database::init().unwrap();
+
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             valid_path,

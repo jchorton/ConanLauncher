@@ -1,0 +1,24 @@
+
+CREATE TABLE IF NOT EXISTS Characters
+(
+    CharacterId INTEGER PRIMARY KEY,
+    Name TEXT NOT NULL,
+    Description TEXT NOT NULL,
+    Image TEXT
+);
+
+CREATE TABLE IF NOT EXISTS CharacterMessages
+(
+    CharacterMessageId INTEGER PRIMARY KEY,
+    CreateTime TIMESTAMP NOT NULL DEFAULT(CURRENT_TIMESTAMP),
+    CharacterId INTEGER NOT NULL REFERENCES Characters(CharacterId),
+    Message TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Messages
+(
+    MessageId INTEGER PRIMARY KEY,
+    CreateTime TIMESTAMP NOT NULL DEFAULT(CURRENT_TIMESTAMP),
+    Sender TEXT NOT NULL,
+    Message TEXT NOT NULL
+);
