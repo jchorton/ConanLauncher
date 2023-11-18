@@ -12,8 +12,9 @@ mod database;
 mod utils;
 mod webhook;
 
-#[macro_use] extern crate rocket;
 #[macro_use] extern crate lazy_static;
+extern crate iron;
+extern crate router;
 
 fn main() {
     

@@ -13,7 +13,7 @@ pub struct Message {
 
 }
 
-#[derive(Debug, Serialize, Deserialize, FromForm, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct NewMessage {
 
     pub message: String,
