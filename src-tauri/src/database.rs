@@ -4,6 +4,8 @@ use std::fs;
 
 use crate::utils;
 
+pub mod character;
+
 pub fn connection() -> Result<Connection> {
 
     let em_dirs = utils::get_em_dirs();

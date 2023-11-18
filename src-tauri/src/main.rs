@@ -27,7 +27,9 @@ fn main() {
             conan_hook::submit_actual_post,
             conan_hook::is_hooked_in,
             conan_hook::force_stop_loop,
-            conan_hook::start_conan_hook_loop
+            conan_hook::start_conan_hook_loop,
+            database::character::get_characters,
+            database::character::add_character
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
