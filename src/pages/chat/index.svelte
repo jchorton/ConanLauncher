@@ -24,6 +24,12 @@
     function on_confirm() {
 
         show_confirmation = false;
+
+        if ($character_id == undefined) {
+            alert("Please select a character.");
+            return;
+        }
+
         invoke("force_stop_loop").then(() => {
 
             text_looping = false;
