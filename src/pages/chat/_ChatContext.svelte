@@ -1,5 +1,6 @@
 
 <script lang="ts">
+    import { afterUpdate } from "svelte";
     import OrangeButton from "../../lib/_OrangeButton.svelte";
     import { messages } from "../../lib/network";
 
@@ -9,9 +10,13 @@
         $messages = [];
     }
 
-    $: if ($messages.length > 0) {
-        context_box.scrollTop = context_box.scrollHeight;
-    }
+    afterUpdate(() => {
+
+        if ($messages.length > 0) {
+            context_box.scrollTop = context_box.scrollHeight;
+        }
+        
+    });
 
 </script>
 
