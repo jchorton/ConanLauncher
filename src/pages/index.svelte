@@ -104,14 +104,14 @@
         <button type="button" class="rounded border px-2 bg-white hover:bg-slate-100 shadow" on:click={set_path}>Set Path</button>
     </div>
     <div class="h-4"></div>
-    <div class="flex flex-row items-center justify-center gap-4">
-        {#if can_launch}
-            <OrangeButton text={"Launch"} on:click={launch_game}/>
-            <OrangeButton text={"Continue"} on:click={continue_game}/>
-        {/if}
-    </div>
-    <div class="h-12"></div>
-    {#if $hooked_in}
+    {#if !$hooked_in}
+        <div class="flex flex-row items-center justify-center gap-4" in:fade|local>
+            {#if can_launch}
+                <OrangeButton text={"Launch"} on:click={launch_game}/>
+                <OrangeButton text={"Continue"} on:click={continue_game}/>
+            {/if}
+        </div>
+    {:else}
         <div class="container w-full flex flex-row justify-center gap-4" transition:fade|local>
             <OrangeButton text={"Characters"} on:click={goto_characters} />
             <OrangeButton text={"Chat"} on:click={goto_chat} />
