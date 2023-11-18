@@ -22,6 +22,7 @@ export function init_network() {
 
     listen("webhook_message", (event: any) => {
 
+        console.log(event);
         let new_messages = event.payload as INewMessage[];
         messages.update((t_messages) => {
             t_messages.push(...new_messages);

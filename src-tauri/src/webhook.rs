@@ -40,12 +40,19 @@ fn message_queue_processor(window: tauri::Window) {
 #[post("/message", data = "<message>")]
 fn message(message: Form<NewMessage>) {
 
+    println!("Received message: {:?}", message);
+
     let message_queue = Arc::clone(&MESSAGE_QUEUE);
     message_queue.lock().unwrap().push(message.into_inner());
 
 }
 
-#[launch]
-pub fn rocket() -> _ {
-    rocket::build().mount("/", routes![message])
+pub async fn rocket() {
+
+    rocket::build()
+        .mount("/", routes![message])
+        .launch()
+        .await
+        .unwrap();
+
 }
