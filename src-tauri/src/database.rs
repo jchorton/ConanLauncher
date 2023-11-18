@@ -5,6 +5,7 @@ use std::fs;
 use crate::utils;
 
 pub mod character;
+pub mod character_message;
 
 pub fn connection() -> Result<Connection> {
 
