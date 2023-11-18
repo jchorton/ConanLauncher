@@ -9,7 +9,9 @@
     import OrangeButton from '../../lib/_OrangeButton.svelte';
     import { goto } from '@roxi/routify';
     import CharacterDropDown from './_CharacterDropDown.svelte';
+    import ChatContext from './_ChatContext.svelte';
     import { character_id } from './chat_store';
+    import { messages } from '../../lib/network';
 
     let text = "";
     let text_looping: boolean = false;
@@ -49,7 +51,17 @@
 
     function on_cut() {
 
-        window.navigator.clipboard.writeText(text);
+        let t_text = "";
+        if ($messages.length > 0) {
+            t_text += "((Context))\n"
+            $messages.forEach((message) => {
+                t_text += `${message.sender}: ${message.message}\n`;
+            });
+            $messages = [];
+        }
+        t_text += "\n((Generate /me from this))"
+
+        window.navigator.clipboard.writeText(t_text);
         text = "";
 
     }
@@ -99,7 +111,14 @@
 <div class="absolute container w-full h-full z-10 flex flex-col justify-center items-center">
     <CharacterDropDown/>
     <div class="h-2"></div>
-    <textarea class="w-full h-80 ml-6 p-1 outline-none rounded-lg shadow-2xl border-orange-900 border-4" bind:value={text} on:input={on_input}></textarea>
+    <div class="grid grid-cols-5 gap-4">
+        <div class="col-span-3">
+            <textarea class="w-full h-80 p-1 outline-none rounded-lg shadow-2xl border-orange-900 border-4" bind:value={text} on:input={on_input}></textarea>
+        </div>
+        <div class="col-span-2">
+            <ChatContext/>
+        </div>
+    </div>
     <div class="text-white text-2xl ml-auto">{text.length}/{MAX_CHARACTERS_PER_POST}</div>
     <div class="h-4"></div>
     <div class="flex flex-row gap-2">

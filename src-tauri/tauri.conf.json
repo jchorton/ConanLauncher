@@ -105,10 +105,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 720,
         "resizable": false,
         "title": "Conan Exiles Launcher - EmmaLabs",
-        "width": 800
+        "width": 1280
       }
     ]
   }
