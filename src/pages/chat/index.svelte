@@ -6,7 +6,6 @@
     import { fly } from 'svelte/transition';
 
     import { hooked_in } from '../../lib/network';
-    import Background from '../../assets/Background.png'
     import OrangeButton from '../../lib/_OrangeButton.svelte';
     import { goto } from '@roxi/routify';
 
@@ -81,7 +80,6 @@
 
 </script>
 
-<img src={Background} class="absolute inset-0 w-full h-full object-cover z-0" alt="Background" />
 <div class="absolute left-4 top-4 z-20">
     <OrangeButton text="Back" on:click={on_back} />
 </div>

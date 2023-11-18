@@ -1,6 +1,5 @@
 
 <script lang="ts">
-    import Background from '../assets/Background.png'
     import { goto } from '@roxi/routify';
     import { open } from '@tauri-apps/api/dialog';
     import { invoke } from '@tauri-apps/api/tauri';
@@ -90,11 +89,14 @@
         $goto("/chat");
     }
 
+    function goto_characters() {
+        $goto("/characters");
+    }
+
     init_network();
 
 </script>
 
-<img src={Background} class="absolute inset-0 w-full h-full object-cover z-0" alt="Background" />
 <div class="absolute container z-10">
     <div class="h-64"></div>
     <div class="flex flex-row items-center justify-center gap-1">
@@ -108,10 +110,11 @@
             <OrangeButton text={"Continue"} on:click={continue_game}/>
         {/if}
     </div>
-    <div class="h-4"></div>
+    <div class="h-12"></div>
     {#if $hooked_in}
-        <div class="container w-full flex flex-row justify-center" transition:fade|local>
-            <OrangeButton text={"Chat"} on:click={goto_chat}/>
+        <div class="container w-full flex flex-row justify-center gap-4" transition:fade|local>
+            <OrangeButton text={"Characters"} on:click={goto_characters} />
+            <OrangeButton text={"Chat"} on:click={goto_chat} />
         </div>
     {/if}
 </div>
