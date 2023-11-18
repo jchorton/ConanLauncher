@@ -15,6 +15,8 @@
     let text_looping: boolean = false;
     let show_confirmation: boolean = false;
 
+    const MAX_CHARACTERS_PER_POST = 2048;
+
     function on_submit() {
         show_confirmation = true;
     }
@@ -77,7 +79,8 @@
 
 <img src={Background} class="absolute inset-0 w-full h-full object-cover z-0" alt="Background" />
 <div class="absolute container w-full h-full z-10 flex flex-col justify-center items-center">
-    <textarea class="w-full h-60 ml-6 p-1 outline-cyan-900 rounded-lg" bind:this={text_area} bind:value={text} on:input={on_input}></textarea>
+    <textarea class="w-full h-80 ml-6 p-1 outline-none rounded-lg shadow-2xl border-orange-900 border-4" bind:this={text_area} bind:value={text} on:input={on_input}></textarea>
+    <div class="text-white text-2xl ml-auto">{text.length}/{MAX_CHARACTERS_PER_POST}</div>
     <div class="h-4"></div>
     <div class="flex flex-row gap-2">
         <OrangeButton text="Reset" on:click={on_reset}/>
@@ -86,7 +89,7 @@
         <OrangeButton text="Submit" on:click={on_submit}/>
     </div>
     {#if show_confirmation}
-        <div class="absolute container z-20 bg-amber-900 w-64 h-32 rounded-lg" transition:fly|local="{{ y: -500 }}">
+        <div class="absolute container z-20 bg-orange-900 shadow-2xl w-64 h-32 rounded-lg border-2 border-black" transition:fly|local="{{ y: -500 }}">
             <div class="h-10"></div>
             <div class="text-center text-white text-lg">Are you sure?</div>
             <div class="flex flex-row items-center justify-center gap-2 w-full">
@@ -95,5 +98,4 @@
             </div>
         </div>
     {/if}
-
 </div>

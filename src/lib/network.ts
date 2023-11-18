@@ -11,7 +11,6 @@ export function init_network() {
 
     listen("conan_hooked_in", (event: any) => {
 
-        console.log(event);
         hooked_in.set(event.payload.hooked_in);
 
     });

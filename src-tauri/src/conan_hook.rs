@@ -22,9 +22,10 @@ lazy_static! {
 }
 
 const ENTER_KEY: usize = 0x0D;
-const ESC_KEY: usize = 0x1B;
+const ESC_KEY: usize   = 0x1B;
 const BACKSPACE_KEY: usize = 0x08;
-const A_KEY: usize = 0x41;
+const A_KEY: usize     = 0x41;
+const SHIFT_KEY: usize = 0x10;
 
 unsafe extern "system" fn enum_windows_proc(hwnd: HWND, param1: LPARAM) -> BOOL {
 
@@ -84,14 +85,18 @@ pub fn hook_into_existing() {
 
 }
 
-fn post_message(msg_type: u32, wparam: WPARAM, millis: u64) {
+fn post_message(msg_type: u32, wparam: usize, millis: u64) {
+
+    let wparam = WPARAM(wparam);
 
     if let Some(hwnd) = CONAN_SANDBOX_HWND.lock().unwrap().as_ref() {
 
         unsafe {
             let _ = PostMessageW(*hwnd, msg_type, wparam, LPARAM(0));
         }
-        thread::sleep(Duration::from_millis(millis));
+        if millis > 0 {
+            thread::sleep(Duration::from_millis(millis));
+        }
 
     }
 
@@ -99,20 +104,20 @@ fn post_message(msg_type: u32, wparam: WPARAM, millis: u64) {
 
 fn typing_loop() {
 
-    post_message(WM_KEYDOWN, WPARAM(ESC_KEY), 250);
-    post_message(WM_KEYDOWN, WPARAM(ESC_KEY), 250);
-    post_message(WM_KEYDOWN, WPARAM(ENTER_KEY), 100);
+    post_message(WM_KEYDOWN, ESC_KEY, 250);
+    post_message(WM_KEYDOWN, ESC_KEY, 250);
+    post_message(WM_KEYDOWN, ENTER_KEY, 100);
 
-    post_message(WM_CHAR, WPARAM(A_KEY), 250);
+    post_message(WM_CHAR, A_KEY, 250);
     while TYPING_LOOP_ACTIVE.load(Ordering::Relaxed) {
 
-        post_message(WM_CHAR, WPARAM(A_KEY), 500);
-        post_message(WM_KEYDOWN, WPARAM(BACKSPACE_KEY), 250);
+        post_message(WM_CHAR, A_KEY, 500);
+        post_message(WM_KEYDOWN, BACKSPACE_KEY, 250);
 
     }
     
     for _i in 0..20 {
-        post_message(WM_KEYDOWN, WPARAM(BACKSPACE_KEY), 5);
+        post_message(WM_KEYDOWN, BACKSPACE_KEY, 5);
     }
 
 }
@@ -125,9 +130,16 @@ pub fn submit_actual_post(post: String) {
 
     let post = post.replace("ChatGPT", "");
     for c in post.chars() {
-        post_message(WM_CHAR, WPARAM(c as usize), 4);
+
+        if c == '\n' {
+            post_message(WM_KEYDOWN, SHIFT_KEY, 0);
+            post_message(WM_KEYDOWN, ENTER_KEY, 0);
+        } else {
+            post_message(WM_CHAR, c as usize, 4);
+        }
+
     }
-    post_message(WM_KEYDOWN, WPARAM(ENTER_KEY), 0);
+    post_message(WM_KEYDOWN, ENTER_KEY, 0);
 
 }
 
