@@ -10,9 +10,10 @@ mod conan_hook;
 mod conan_launch_settings;
 mod database;
 mod utils;
+mod webhook;
 
-#[macro_use]
-extern crate lazy_static;
+#[macro_use] extern crate rocket;
+#[macro_use] extern crate lazy_static;
 
 fn main() {
     
@@ -29,7 +30,8 @@ fn main() {
             conan_hook::force_stop_loop,
             conan_hook::start_conan_hook_loop,
             database::character::get_characters,
-            database::character::add_character
+            database::character::add_character,
+            webhook::start_webserver
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
