@@ -70,6 +70,10 @@
         invoke("start_typing_loop").then(() => {});
 
     }
+
+    function on_back() {
+        $goto("/");
+    }
     
     $: if (!$hooked_in) {
         $goto("/");
@@ -78,6 +82,9 @@
 </script>
 
 <img src={Background} class="absolute inset-0 w-full h-full object-cover z-0" alt="Background" />
+<div class="absolute left-4 top-4 z-20">
+    <OrangeButton text="Back" on:click={on_back} />
+</div>
 <div class="absolute container w-full h-full z-10 flex flex-col justify-center items-center">
     <textarea class="w-full h-80 ml-6 p-1 outline-none rounded-lg shadow-2xl border-orange-900 border-4" bind:this={text_area} bind:value={text} on:input={on_input}></textarea>
     <div class="text-white text-2xl ml-auto">{text.length}/{MAX_CHARACTERS_PER_POST}</div>
