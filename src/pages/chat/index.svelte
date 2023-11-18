@@ -59,7 +59,8 @@
             });
             $messages = [];
         }
-        t_text += "\n((Generate /me from this))"
+        t_text += "\n((Generate /me from this))\n"
+        t_text += text;
 
         window.navigator.clipboard.writeText(t_text);
         text = "";
