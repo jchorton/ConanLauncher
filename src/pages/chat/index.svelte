@@ -4,9 +4,13 @@
 
     import { invoke } from '@tauri-apps/api';
     import { fly } from 'svelte/transition';
+
+    import { hooked_in } from '../../lib/network';
     import Background from '../../assets/Background.png'
     import OrangeButton from '../../lib/_OrangeButton.svelte';
+    import { goto } from '@roxi/routify';
 
+    let text_area: HTMLTextAreaElement;
     let text = "";
     let text_looping: boolean = false;
     let show_confirmation: boolean = false;
@@ -64,12 +68,16 @@
         invoke("start_typing_loop").then(() => {});
 
     }
+    
+    $: if (!$hooked_in) {
+        $goto("/");
+    }
 
 </script>
 
 <img src={Background} class="absolute inset-0 w-full h-full object-cover z-0" alt="Background" />
 <div class="absolute container w-full h-full z-10 flex flex-col justify-center items-center">
-    <textarea class="w-full h-60 ml-6 p-1 outline-cyan-900 rounded-lg" bind:value={text} on:input={on_input}></textarea>
+    <textarea class="w-full h-60 ml-6 p-1 outline-cyan-900 rounded-lg" bind:this={text_area} bind:value={text} on:input={on_input}></textarea>
     <div class="h-4"></div>
     <div class="flex flex-row gap-2">
         <OrangeButton text="Reset" on:click={on_reset}/>

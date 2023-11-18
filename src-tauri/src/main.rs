@@ -13,9 +13,7 @@ mod conan_launch_settings;
 extern crate lazy_static;
 
 fn main() {
-
-    conan_hook::hook_into_existing();
-
+    
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             valid_path,
@@ -24,7 +22,8 @@ fn main() {
             conan_hook::start_typing_loop,
             conan_hook::submit_actual_post,
             conan_hook::is_hooked_in,
-            conan_hook::force_stop_loop
+            conan_hook::force_stop_loop,
+            conan_hook::start_conan_hook_loop
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

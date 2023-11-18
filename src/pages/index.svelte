@@ -4,11 +4,13 @@
     import { goto } from '@roxi/routify';
     import { open } from '@tauri-apps/api/dialog';
     import { invoke } from '@tauri-apps/api/tauri';
-    import { appWindow } from '@tauri-apps/api/window';
+    import { fade } from 'svelte/transition';
+    import { hooked_in } from '../lib/network';
 
     import { launcher_settings } from '../lib/store';
 
     import OrangeButton from '../lib/_OrangeButton.svelte';
+    import { init_network } from '../lib/network';
 
     let can_launch = false;
     let battle_eye = $launcher_settings?.battle_eye ?? false;
@@ -58,9 +60,7 @@
 
     function launch(conan_launch_settings: ConanLaunchSettings) {
 
-        invoke("launch_game", { launcherSettings: $launcher_settings, conanLaunchSettings: conan_launch_settings }).then((_) => {
-            $goto("/chat");
-        })
+        invoke("launch_game", { launcherSettings: $launcher_settings, conanLaunchSettings: conan_launch_settings }).then((_) => {})
 
     }
 
@@ -86,27 +86,16 @@
 
     }
 
-    function check_for_hook() {
-
-        invoke("is_hooked_in").then((hooked: any) => {
-
-            console.log(hooked);
-            let t_hooked = hooked as boolean;
-            if (t_hooked) {
-                $goto("/chat");
-            }
-
-        });
-
+    function goto_chat() {    
+        $goto("/chat");
     }
 
-    check_for_hook();
+    init_network();
 
 </script>
 
 <img src={Background} class="absolute inset-0 w-full h-full object-cover z-0" alt="Background" />
 <div class="absolute container z-10">
-
     <div class="h-64"></div>
     <div class="flex flex-row items-center justify-center gap-1">
         <input type="text" bind:value={path} placeholder="Path" class="rounded-md border px-1 w-96 bg-white outline-indigo-500 shadow" disabled/>
@@ -119,7 +108,12 @@
             <OrangeButton text={"Continue"} on:click={continue_game}/>
         {/if}
     </div>
-
+    <div class="h-4"></div>
+    {#if $hooked_in}
+        <div class="container w-full flex flex-row justify-center" transition:fade|local>
+            <OrangeButton text={"Chat"} on:click={goto_chat}/>
+        </div>
+    {/if}
 </div>
 
 <div class="flex flex-row gap-2 absolute right-3 bottom-3 text-lg bg-neutral-900 rounded-md px-2 shadow-xl">

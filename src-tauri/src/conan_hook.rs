@@ -4,6 +4,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
+use serde_json::json;
 use windows::Win32::Foundation::{HWND, LPARAM, BOOL, WPARAM};
 use windows::Win32::UI::WindowsAndMessaging::{
     EnumWindows, 
@@ -166,5 +167,26 @@ pub fn force_stop_loop() {
 pub fn is_hooked_in() -> bool {
 
     CONAN_SANDBOX_HWND.lock().unwrap().is_some()
+
+}
+
+#[tauri::command]
+pub fn start_conan_hook_loop(window: tauri::Window) {
+
+    thread::spawn(move || {
+
+        loop {
+
+            hook_into_existing();
+
+            window.emit("conan_hooked_in", json!({
+                "hooked_in": is_hooked_in(),
+            })).unwrap();
+
+            thread::sleep(Duration::from_millis(1000));
+
+        }
+
+    });
 
 }
