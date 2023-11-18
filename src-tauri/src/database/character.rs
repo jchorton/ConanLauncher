@@ -4,7 +4,7 @@ use rusqlite::{params, Connection, Result};
 
 use crate::database;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Character {
 
     pub character_id: i32,
@@ -45,13 +45,27 @@ impl Character {
         Ok(characters)
     }
 
-    pub fn insert(conn: &Connection, new_character: NewCharacter) -> Result<()> {
+    pub fn insert(conn: &Connection, new_character: NewCharacter) -> Result<Character> {
 
         conn.execute(
             "INSERT INTO Characters (Name, Description, Image) VALUES (?1, ?2, ?3)",
             params![new_character.name, new_character.description, new_character.image],
         )?;
-        Ok(())
+        Ok(Self::fetch_new(conn))
+
+    }
+
+    fn fetch_new(conn: &Connection) -> Character {
+
+        let mut stmt = conn.prepare("SELECT CharacterId, Name, Description, Image FROM Characters ORDER BY CharacterId DESC LIMIT 1").unwrap();
+        stmt.query_row([], |row| {
+            Ok(Character {
+                character_id: row.get(0).unwrap(),
+                name: row.get(1).unwrap(),
+                description: row.get(2).unwrap(),
+                image: row.get(3).unwrap(),
+            })
+        }).unwrap()
 
     }
 
@@ -66,9 +80,11 @@ pub fn get_characters() -> Vec<Character> {
 }
 
 #[tauri::command]
-pub fn add_character(new_character: NewCharacter) {
+pub fn add_character(window: tauri::Window, new_character: NewCharacter) {
 
     let conn = database::connection().unwrap();
-    Character::insert(&conn, new_character).unwrap();
+    let character = Character::insert(&conn, new_character).unwrap();
+
+    window.emit("character_added", character).unwrap();
 
 }

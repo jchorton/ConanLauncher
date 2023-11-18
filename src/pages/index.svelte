@@ -10,6 +10,7 @@
 
     import OrangeButton from '../lib/_OrangeButton.svelte';
     import { init_network } from '../lib/network';
+    import { init_characters } from '../lib/characters';
 
     let can_launch = false;
     let battle_eye = $launcher_settings?.battle_eye ?? false;
@@ -94,6 +95,7 @@
     }
 
     init_network();
+    init_characters();
 
 </script>
 

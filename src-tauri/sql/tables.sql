@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS Characters
 (
     CharacterId INTEGER PRIMARY KEY,
-    Name TEXT NOT NULL,
+    Name TEXT UNIQUE NOT NULL,
     Description TEXT,
     Image TEXT
 );
