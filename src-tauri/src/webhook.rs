@@ -5,7 +5,7 @@ use router::Router;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
-use bodyparser;
+use urlencoded::UrlEncodedQuery;
 
 use crate::database;
 use crate::database::message::{NewMessage, Message};
@@ -21,6 +21,7 @@ pub fn start_webserver(window: tauri::Window) {
     thread::spawn(|| {
         let mut router = Router::new(); 
         router.post("/", post_message, "post");
+        router.get("/", post_message, "get");
         Iron::new(router).http("localhost:3000").unwrap();
     });
 
@@ -45,18 +46,22 @@ fn message_queue_processor(window: tauri::Window) {
 
 fn post_message(req: &mut Request) -> IronResult<Response> {
 
-    println!("Received message");
-    println!("{:?}", req);
+    let query = match req.get_ref::<UrlEncodedQuery>() {
+        Ok(query) => query,
+        Err(_) => return Ok(Response::with((status::BadRequest, "Invalid query"))),
+    };
+
+    let message = query.get("message").and_then(|v| v.first()).map_or("", |v| v);
+    let sender = query.get("sender").and_then(|v| v.first()).map_or("", |v| v);
+
+    let new_message = NewMessage {
+        sender: sender.to_string(),
+        message: message.to_string(),
+    };
 
     let message_queue = Arc::clone(&MESSAGE_QUEUE);
-    let message_body = req.get::<bodyparser::Struct<NewMessage>>();
+    message_queue.lock().unwrap().push(new_message);
 
-    match message_body {
-        Ok(Some(message)) => {
-            message_queue.lock().unwrap().push(message);
-            Ok(Response::with((status::Ok, "Message received")))
-        }
-        _ => Ok(Response::with((status::BadRequest, "Invalid message"))),
-    }
-
+    Ok(Response::with((status::Ok, "Message received")))
+    
 }

@@ -95,6 +95,7 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
+ "urlencoded",
  "windows 0.52.0",
 ]
 
@@ -3658,6 +3659,18 @@ dependencies = [
  "idna 0.4.0",
  "percent-encoding 2.3.0",
  "serde",
+]
+
+[[package]]
+name = "urlencoded"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0a52f50139118b60ae91af08bf15ed158817d34b91b9d24c11ffbe21195d33e3"
+dependencies = [
+ "bodyparser",
+ "iron",
+ "plugin",
+ "url 1.7.2",
 ]
 
 [[package]]
