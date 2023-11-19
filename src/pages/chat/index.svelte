@@ -51,6 +51,15 @@
 
     function on_cut() {
 
+        let t_text = "((Generate /me from this))\n"
+        t_text += text;
+        window.navigator.clipboard.writeText(t_text);
+        text = "";
+        
+    }
+
+    function on_cut_with_context() {
+
         let t_text = "";
         if ($messages.length > 0) {
             t_text += "((Context))\n"
@@ -59,7 +68,7 @@
             });
             $messages = [];
         }
-        t_text += "\n((Generate /me from this))\n"
+        t_text += "((Generate /me from this))\n"
         t_text += text;
 
         window.navigator.clipboard.writeText(t_text);
@@ -125,7 +134,8 @@
     <div class="flex flex-row gap-2">
         <OrangeButton text="Reset" on:click={on_reset}/>
         <OrangeButton text="Stop" on:click={on_stop} />
-        <OrangeButton text="Cut" on:click={on_cut} />
+        <OrangeButton text="Cut" on:click={on_cut}/>
+        <OrangeButton text="Cut With Context" on:click={on_cut_with_context} />
         <OrangeButton text="Submit" on:click={on_submit}/>
     </div>
     {#if show_confirmation}
