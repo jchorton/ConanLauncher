@@ -10,7 +10,7 @@
     import OrangeButton from '../../lib/_OrangeButton.svelte';
     
     import ChatContext from './_ChatContext.svelte';
-    import { character_id, chat_style } from './chat_store';
+    import { character_id, chat_style, verbosity } from './chat_store';
     import { messages } from '../../lib/network';
     import Dropdowns from './_Dropdowns.svelte';
 
@@ -61,10 +61,15 @@
 
     function get_generate_text(): string {
 
-        let t_text = "((Generate /me from the context below.";
+        let t_text = "((Generate /me from the content below.";
         if ($chat_style != undefined) {
-            t_text += ` The generated writing style should be: ${$chat_style}`;
+            t_text += ` The generated writing style should be: ${$chat_style}.`;
         }
+
+        if ($verbosity != undefined) {
+            t_text += ` The generated verbosity should be: ${$verbosity}.`;
+        }
+
         t_text += "))\n"
         return t_text;
 
