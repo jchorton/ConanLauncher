@@ -62,12 +62,16 @@
 
         let t_text = "";
         if ($messages.length > 0) {
+
             t_text += "((Context))\n"
             $messages.forEach((message) => {
                 t_text += `${message.sender}: ${message.message}\n`;
             });
+            t_text += "\n";
             $messages = [];
+
         }
+        
         t_text += "((Generate /me from this))\n"
         t_text += text;
 
