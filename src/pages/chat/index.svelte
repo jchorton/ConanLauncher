@@ -71,8 +71,8 @@
             $messages = [];
 
         }
-        
-        t_text += "((Generate /me from this))\n"
+
+        t_text += "((Generate /me from the context below))\n"
         t_text += text;
 
         window.navigator.clipboard.writeText(t_text);
