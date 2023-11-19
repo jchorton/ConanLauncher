@@ -3,15 +3,16 @@
 <script lang="ts">
 
     import { invoke } from '@tauri-apps/api';
+    import { goto } from '@roxi/routify';
     import { fly } from 'svelte/transition';
 
     import { hooked_in } from '../../lib/network';
     import OrangeButton from '../../lib/_OrangeButton.svelte';
-    import { goto } from '@roxi/routify';
-    import CharacterDropDown from './_CharacterDropDown.svelte';
+    
     import ChatContext from './_ChatContext.svelte';
-    import { character_id } from './chat_store';
+    import { character_id, chat_style } from './chat_store';
     import { messages } from '../../lib/network';
+    import Dropdowns from './_Dropdowns.svelte';
 
     let text = "";
     let text_looping: boolean = false;
@@ -51,11 +52,22 @@
 
     function on_cut() {
 
-        let t_text = "((Generate /me from this))\n"
+        let t_text = get_generate_text();
         t_text += text;
         window.navigator.clipboard.writeText(t_text);
         text = "";
         
+    }
+
+    function get_generate_text(): string {
+
+        let t_text = "((Generate /me from the context below.";
+        if ($chat_style != undefined) {
+            t_text += ` The generated writing style should be: ${$chat_style}`;
+        }
+        t_text += "))\n"
+        return t_text;
+
     }
 
     function on_cut_with_context() {
@@ -72,7 +84,7 @@
 
         }
 
-        t_text += "((Generate /me from the context below))\n"
+        t_text += get_generate_text();
         t_text += text;
 
         window.navigator.clipboard.writeText(t_text);
@@ -123,7 +135,7 @@
     <OrangeButton text="Back" on:click={on_back} />
 </div>
 <div class="absolute container w-full h-full z-10 flex flex-col justify-center items-center">
-    <CharacterDropDown/>
+    <Dropdowns/>
     <div class="h-2"></div>
     <div class="grid grid-cols-5 gap-4 w-full">
         <div class="col-span-3">
