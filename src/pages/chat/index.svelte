@@ -10,7 +10,7 @@
     import OrangeButton from '../../lib/_OrangeButton.svelte';
     
     import ChatContext from './_ChatContext.svelte';
-    import { character_id, chat_style, verbosity } from './chat_store';
+    import { character_id, chat_style, verbosity, prose_style } from './chat_store';
     import { messages } from '../../lib/network';
     import Dropdowns from './_Dropdowns.svelte';
 
@@ -68,6 +68,10 @@
 
         if ($verbosity != undefined) {
             t_text += ` The generated verbosity should be: ${$verbosity}.`;
+        }
+
+        if ($prose_style != undefined) {
+            t_text += ` The generated prose style should be: ${$prose_style}.`;
         }
 
         t_text += "))\n"
