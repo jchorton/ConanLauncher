@@ -43,7 +43,19 @@ impl Message {
     pub fn insert(conn: &Connection, new_message: NewMessage) -> Result<()> {
 
         conn.execute(
-            "INSERT INTO Messages (Sender, Message) VALUES (?1, ?2)",
+            "INSERT INTO MessageSenders (Sender) VALUES (?1) ON CONFLICT DO NOTHING;", 
+            params![new_message.sender]
+        )?;
+
+        conn.execute(
+            "
+                INSERT INTO Messages (MessageSenderId, Message)
+                SELECT
+                    MessageSenders.MessageSenderId,
+                    ?2
+                FROM MessageSenders
+                WHERE MessageSenders.Sender = ?1
+            ",
             params![new_message.sender, new_message.message],
         )?;
         Ok(())
@@ -54,8 +66,21 @@ impl Message {
 
         let tx = conn.transaction()?;
         for new_message in new_messages {
+
             tx.execute(
-                "INSERT INTO Messages (Sender, Message) VALUES (?1, ?2)",
+                "INSERT INTO MessageSenders (Sender) VALUES (?1) ON CONFLICT DO NOTHING;", 
+                params![new_message.sender]
+            )?;
+
+            tx.execute(
+                "
+                    INSERT INTO Messages (MessageSenderId, Message)
+                    SELECT
+                        MessageSenders.MessageSenderId,
+                        ?2
+                    FROM MessageSenders
+                    WHERE MessageSenders.Sender = ?1
+                ",
                 params![new_message.sender, new_message.message],
             )?;
         }
