@@ -13,6 +13,7 @@
     import { character_id, chat_style, verbosity, prose_style } from './chat_store';
     import { messages } from '../../lib/network';
     import Dropdowns from './_Dropdowns.svelte';
+    import Timer from './_Timer.svelte';
 
     let text = "";
     let text_looping: boolean = false;
@@ -144,6 +145,7 @@
     <OrangeButton text="Back" on:click={on_back} />
 </div>
 <div class="absolute container w-full h-full z-10 flex flex-col justify-center items-center">
+    <Timer {text_looping}/>
     <Dropdowns/>
     <div class="h-2"></div>
     <div class="grid grid-cols-5 gap-4 w-full">
