@@ -69,6 +69,17 @@ impl Character {
 
     }
 
+    pub fn delete(conn: &Connection, character_id: i32) -> Result<()> {
+
+        conn.execute(
+            "DELETE FROM Characters WHERE CharacterId = ?1",
+            params![character_id],
+        )?;
+
+        Ok(())
+
+    }
+
 }
 
 #[tauri::command]
@@ -86,5 +97,13 @@ pub fn add_character(window: tauri::Window, new_character: NewCharacter) {
     let character = Character::insert(&conn, new_character).unwrap();
 
     window.emit("character_added", character).unwrap();
+
+}
+
+#[tauri::command]
+pub fn delete_character(window: tauri::Window, character_id: i32) {
+
+    let conn = database::connection().unwrap();
+    Character::delete(&conn, character_id).unwrap();
 
 }

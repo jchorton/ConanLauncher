@@ -25,11 +25,11 @@
         <OrangeButton text={"New"} on:click={on_new}/>
     </div>
     <div class="h-12"></div>
-    <div class="flex flex-col space-y-4 mt-8 w-full items-center">
+    <div class="flex flex-col gap-2 mt-8 w-full items-center">
         {#each $characters as character}
             <!-- svelte-ignore a11y-no-static-element-interactions -->
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div class="px-4 py-2 bg-gray-200 rounded shadow cursor-pointer w-96 text-center" on:click={() => on_character_click(character)}>
+            <div class="px-4 py-2 bg-orange-800 text-white text-xl rounded shadow cursor-pointer w-96 text-center" on:click={() => on_character_click(character)}>
                 {character.name}
             </div>
         {/each}

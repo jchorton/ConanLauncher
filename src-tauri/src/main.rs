@@ -32,7 +32,8 @@ fn main() {
             conan_hook::start_conan_hook_loop,
             database::character::get_characters,
             database::character::add_character,
-            webhook::start_webserver
+            database::character::delete_character,
+            webhook::start_webserver,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
