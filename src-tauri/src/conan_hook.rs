@@ -12,10 +12,10 @@ use windows::Win32::UI::WindowsAndMessaging::{
     GetWindowTextW,
     PostMessageW,
     WM_KEYDOWN,
-    WM_CHAR
+    WM_CHAR, GetForegroundWindow
 };
 
-use crate::database::character_message::{NewCharacterMessage, self};
+use crate::database::character_message::NewCharacterMessage;
 
 lazy_static! {
     static ref TYPING_LOOP_ACTIVE: AtomicBool = AtomicBool::new(false);
@@ -104,6 +104,20 @@ fn post_message(msg_type: u32, wparam: usize, millis: u64) {
 
 }
 
+fn window_in_focus() -> bool {
+
+    if let Some(hwnd) = CONAN_SANDBOX_HWND.lock().unwrap().as_ref() {
+
+        unsafe {
+            return GetForegroundWindow() == *hwnd;
+        }
+
+    }
+
+    false
+
+}
+
 fn typing_loop() {
 
     post_message(WM_KEYDOWN, ESC_KEY, 250);
@@ -112,6 +126,13 @@ fn typing_loop() {
 
     post_message(WM_CHAR, A_KEY, 250);
     while TYPING_LOOP_ACTIVE.load(Ordering::Relaxed) {
+
+        if window_in_focus() {
+
+            TYPING_LOOP_ACTIVE.store(false, Ordering::Relaxed);
+            return;
+
+        }
 
         post_message(WM_CHAR, A_KEY, 500);
         post_message(WM_KEYDOWN, BACKSPACE_KEY, 250);

@@ -1,11 +1,11 @@
 
 /**
  * @roxi/routify 2.18.12
- * File generated Thu Nov 16 2023 11:43:22 GMT-0600 (Central Standard Time)
+ * File generated Fri Nov 24 2023 13:05:21 GMT-0600 (Central Standard Time)
  */
 
 export const __version = "2.18.12"
-export const __timestamp = "2023-11-16T17:43:22.728Z"
+export const __timestamp = "2023-11-24T19:05:21.604Z"
 
 //buildRoutes
 import { buildClientTree } from "@roxi/routify/runtime/buildRoutes"
@@ -18,12 +18,61 @@ export const options = {}
 
 //tree
 export const _tree = {
-  "name": "root",
-  "filepath": "/",
+  "name": "_layout",
+  "filepath": "/_layout.svelte",
   "root": true,
   "ownMeta": {},
-  "absolutePath": "src/pages",
+  "absolutePath": "D:/Code/conan-launcher/src/pages/_layout.svelte",
   "children": [
+    {
+      "isFile": false,
+      "isDir": true,
+      "file": "characters",
+      "filepath": "/characters",
+      "name": "characters",
+      "ext": "",
+      "badExt": false,
+      "absolutePath": "D:/Code/conan-launcher/src/pages/characters",
+      "children": [
+        {
+          "isFile": true,
+          "isDir": false,
+          "file": "index.svelte",
+          "filepath": "/characters/index.svelte",
+          "name": "index",
+          "ext": "svelte",
+          "badExt": false,
+          "absolutePath": "D:/Code/conan-launcher/src/pages/characters/index.svelte",
+          "importPath": "../src/pages/characters/index.svelte",
+          "isLayout": false,
+          "isReset": false,
+          "isIndex": true,
+          "isFallback": false,
+          "isPage": true,
+          "ownMeta": {},
+          "meta": {
+            "recursive": true,
+            "preload": false,
+            "prerender": true
+          },
+          "path": "/characters/index",
+          "id": "_characters_index",
+          "component": () => import('../src/pages/characters/index.svelte').then(m => m.default)
+        }
+      ],
+      "isLayout": false,
+      "isReset": false,
+      "isIndex": false,
+      "isFallback": false,
+      "isPage": false,
+      "ownMeta": {},
+      "meta": {
+        "recursive": true,
+        "preload": false,
+        "prerender": true
+      },
+      "path": "/characters"
+    },
     {
       "isFile": false,
       "isDir": true,
@@ -74,6 +123,55 @@ export const _tree = {
       "path": "/chat"
     },
     {
+      "isFile": false,
+      "isDir": true,
+      "file": "edit_character",
+      "filepath": "/edit_character",
+      "name": "edit_character",
+      "ext": "",
+      "badExt": false,
+      "absolutePath": "D:/Code/conan-launcher/src/pages/edit_character",
+      "children": [
+        {
+          "isFile": true,
+          "isDir": false,
+          "file": "index.svelte",
+          "filepath": "/edit_character/index.svelte",
+          "name": "index",
+          "ext": "svelte",
+          "badExt": false,
+          "absolutePath": "D:/Code/conan-launcher/src/pages/edit_character/index.svelte",
+          "importPath": "../src/pages/edit_character/index.svelte",
+          "isLayout": false,
+          "isReset": false,
+          "isIndex": true,
+          "isFallback": false,
+          "isPage": true,
+          "ownMeta": {},
+          "meta": {
+            "recursive": true,
+            "preload": false,
+            "prerender": true
+          },
+          "path": "/edit_character/index",
+          "id": "_edit_character_index",
+          "component": () => import('../src/pages/edit_character/index.svelte').then(m => m.default)
+        }
+      ],
+      "isLayout": false,
+      "isReset": false,
+      "isIndex": false,
+      "isFallback": false,
+      "isPage": false,
+      "ownMeta": {},
+      "meta": {
+        "recursive": true,
+        "preload": false,
+        "prerender": true
+      },
+      "path": "/edit_character"
+    },
+    {
       "isFile": true,
       "isDir": false,
       "file": "index.svelte",
@@ -99,16 +197,24 @@ export const _tree = {
       "component": () => import('../src/pages/index.svelte').then(m => m.default)
     }
   ],
-  "isLayout": false,
+  "isLayout": true,
   "isReset": false,
   "isIndex": false,
   "isFallback": false,
+  "isPage": false,
+  "isFile": true,
+  "file": "_layout.svelte",
+  "ext": "svelte",
+  "badExt": false,
+  "importPath": "../src/pages/_layout.svelte",
   "meta": {
     "recursive": true,
     "preload": false,
     "prerender": true
   },
-  "path": "/"
+  "path": "/",
+  "id": "__layout",
+  "component": () => import('../src/pages/_layout.svelte').then(m => m.default)
 }
 
 
