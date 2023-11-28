@@ -4,6 +4,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
+use tauri::Window;
 use serde_json::json;
 use windows::Win32::Foundation::{HWND, LPARAM, BOOL, WPARAM};
 use windows::Win32::UI::WindowsAndMessaging::{
@@ -79,7 +80,10 @@ pub fn hook_into_existing() {
     unsafe {
             
         match EnumWindows(Some(enum_windows_existing_proc), LPARAM(0)) {
-            Ok(_) => {},
+            Ok(_) => {
+                //Enumerated every window and wasn't able to find ConanSandbox
+                CONAN_SANDBOX_HWND.lock().unwrap().take();
+            },
             Err(_) => {}
         }
         
@@ -118,7 +122,7 @@ fn window_in_focus() -> bool {
 
 }
 
-fn typing_loop() {
+fn typing_loop(window: Window) {
 
     post_message(WM_KEYDOWN, ESC_KEY, 250);
     post_message(WM_KEYDOWN, ESC_KEY, 250);
@@ -130,6 +134,7 @@ fn typing_loop() {
         if window_in_focus() {
 
             TYPING_LOOP_ACTIVE.store(false, Ordering::Relaxed);
+            window.emit("typing_loop_status", json!({"active": false})).unwrap();
             return;
 
         }
@@ -170,22 +175,16 @@ pub fn submit_actual_post(character_message: NewCharacterMessage) {
 }
 
 #[tauri::command]
-pub fn start_typing_loop() {
-
-    #[cfg(debug_assertions)] {
-        println!("Checking if typing loop is active");
-    }
+pub fn start_typing_loop(window: Window) {
 
     if TYPING_LOOP_ACTIVE.load(Ordering::Relaxed) {
         return;
     }
 
-    #[cfg(debug_assertions)] {
-        println!("Starting typing loop");
-    }
-
     TYPING_LOOP_ACTIVE.store(true, Ordering::Relaxed);
-    TYPING_JOIN_HANDLE.lock().unwrap().replace(thread::spawn(typing_loop));
+    TYPING_JOIN_HANDLE.lock().unwrap().replace(thread::spawn(move || {
+        typing_loop(window);
+    }));
 
 }
 
@@ -209,7 +208,7 @@ pub fn is_hooked_in() -> bool {
 }
 
 #[tauri::command]
-pub fn start_conan_hook_loop(window: tauri::Window) {
+pub fn start_conan_hook_loop(window: Window) {
 
     thread::spawn(move || {
 

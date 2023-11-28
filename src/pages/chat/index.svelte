@@ -10,13 +10,12 @@
     import OrangeButton from '../../lib/_OrangeButton.svelte';
     
     import ChatContext from './_ChatContext.svelte';
-    import { character_id, chat_style, verbosity, prose_style } from './chat_store';
+    import { character_id, chat_style, verbosity, prose_style, text_chat_looping } from './chat_store';
     import { messages } from '../../lib/network';
     import Dropdowns from './_Dropdowns.svelte';
     import Timer from './_Timer.svelte';
 
     let text = "";
-    let text_looping: boolean = false;
     let show_confirmation: boolean = false;
 
     const MAX_CHARACTERS_PER_POST = 2048;
@@ -36,7 +35,7 @@
 
         invoke("force_stop_loop").then(() => {
 
-            text_looping = false;
+            $text_chat_looping = false;
 
             let payload = {
                 character_id: $character_id,
@@ -106,7 +105,7 @@
 
         invoke("force_stop_loop").then(() => {
 
-            text_looping = true;
+            $text_chat_looping = true;
             invoke("start_typing_loop").then(() => {});
 
         });
@@ -116,17 +115,17 @@
     function on_stop() {
 
         invoke("force_stop_loop").then(() => {});
-        text_looping = false;
+        $text_chat_looping = false;
 
     }
 
     function on_input() {
 
-        if (text_looping) {
+        if ($text_chat_looping) {
             return;
         }
 
-        text_looping = true;
+        $text_chat_looping = true;
         invoke("start_typing_loop").then(() => {});
 
     }
@@ -145,7 +144,7 @@
     <OrangeButton text="Back" on:click={on_back} />
 </div>
 <div class="absolute container w-full h-full z-10 flex flex-col justify-center items-center">
-    <Timer {text_looping}/>
+    <Timer/>
     <Dropdowns/>
     <div class="h-2"></div>
     <div class="grid grid-cols-5 gap-4 w-full">

@@ -34,3 +34,4 @@ export const character_id = writable<number | undefined>(undefined);
 export const chat_style   = writable<ChatStyle | undefined>(undefined);
 export const verbosity    = writable<Verbosity | undefined>(undefined);
 export const prose_style  = writable<ProseStyle | undefined>(undefined);
+export const text_chat_looping = writable(false);

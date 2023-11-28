@@ -2,8 +2,8 @@
 <script lang="ts">
 
     import { onMount } from "svelte";
+    import { text_chat_looping } from "./chat_store";
 
-    export let text_looping: boolean = false;
     let time_elapsed: number = 0;
     let current_time = Date.now();
 
@@ -12,7 +12,7 @@
         let interval = setInterval(() => {
 
             let diff = Date.now() - current_time;
-            if (text_looping) {
+            if ($text_chat_looping) {
                 time_elapsed += diff;
             }
             current_time = Date.now();
@@ -34,7 +34,7 @@
 
     }
 
-    $: if (!text_looping) {
+    $: if (!$text_chat_looping) {
         time_elapsed = 0;
     } else {
         current_time = Date.now();

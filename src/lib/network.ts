@@ -4,11 +4,18 @@ import { listen } from '@tauri-apps/api/event'
 import { invoke } from "@tauri-apps/api";
 
 import { characters } from "./characters";
-import { character_id } from "../pages/chat/chat_store";
+import { 
+    character_id, 
+    text_chat_looping 
+} from "../pages/chat/chat_store";
 
 export interface INewMessage {
     message: string,
     sender: string
+}
+
+export interface ITypingLoopStatus {
+    active: boolean
 }
 
 export const hooked_in = writable(false);
@@ -47,6 +54,13 @@ export function init_network() {
             return t_messages;
 
         });
+
+    });
+
+    listen("typing_loop_status", (event: any) => {
+
+        let payload = event.payload as ITypingLoopStatus;
+        text_chat_looping.set(payload.active);
 
     });
 
