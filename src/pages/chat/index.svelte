@@ -133,7 +133,10 @@
     }
 
     function on_back() {
+
+        on_stop();
         $goto("/");
+        
     }
     
     $: if (!$hooked_in) {
