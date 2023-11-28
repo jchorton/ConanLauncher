@@ -18,6 +18,8 @@
     let text = "";
     let show_confirmation: boolean = false;
 
+    $text_chat_looping = false;
+
     const MAX_CHARACTERS_PER_POST = 2048;
 
     function on_submit() {
