@@ -49,9 +49,15 @@ unsafe extern "system" fn enum_windows_existing_proc(hwnd: HWND, _param1: LPARAM
     let mut text: [u16; 256] = [0; 256];
     GetWindowTextW(hwnd, &mut text);
 
-    let window_text = String::from_utf16(&text)
-        .unwrap()
-        .replace("\0", "");
+    let window_text: String;
+    match String::from_utf16(&text) {
+        Ok(text) => {
+            window_text = text.replace("\0", "");
+        },
+        Err(_) => {
+            return BOOL(1);
+        }
+    }
 
     if window_text == "ConanSandbox " {
         CONAN_SANDBOX_HWND.lock().unwrap().replace(hwnd);
