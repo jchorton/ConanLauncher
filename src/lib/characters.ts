@@ -18,8 +18,15 @@ export interface INewCharacter {
 
 
 export const characters = writable<ICharacter[]>([]);
+var initialized: boolean = false;
 
 export function init_characters() {
+
+    if (initialized) {
+        return;
+    }
+    
+    initialized = true;
 
     invoke("get_characters").then((result: any) => {
         let t_result = result as ICharacter[];

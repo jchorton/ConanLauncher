@@ -21,7 +21,15 @@ export interface ITypingLoopStatus {
 export const hooked_in = writable(false);
 export const messages  = writable<INewMessage[]>([]);
 
+var initialized: boolean = false;
+
 export function init_network() {
+
+    if (initialized) {
+        return;
+    }
+    
+    initialized = true;
 
     invoke("start_conan_hook_loop");
     invoke("start_webserver");
