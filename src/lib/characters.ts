@@ -16,7 +16,6 @@ export interface INewCharacter {
     image?: string;
 }
 
-
 export const characters = writable<ICharacter[]>([]);
 var initialized: boolean = false;
 
@@ -25,7 +24,7 @@ export function init_characters() {
     if (initialized) {
         return;
     }
-    
+
     initialized = true;
 
     invoke("get_characters").then((result: any) => {
