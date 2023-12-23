@@ -43,3 +43,4 @@
 </script>
 
 <div class="rounded-xl bg-amber-900 text-white text-xl px-2 shadow-xl">Post time: {convert_to_time_string(time_elapsed)}</div>
+<div class="h-1"></div>

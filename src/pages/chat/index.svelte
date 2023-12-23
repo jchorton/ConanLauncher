@@ -10,7 +10,7 @@
     import OrangeButton from '../../lib/_OrangeButton.svelte';
     
     import ChatContext from './_ChatContext.svelte';
-    import { character_id, chat_style, verbosity, prose_style, text_chat_looping } from './chat_store';
+    import { character_id, chat_style, verbosity, prose_style, text_chat_looping, dialogue_era } from './chat_store';
     import { messages } from '../../lib/network';
     import Dropdowns from './_Dropdowns.svelte';
     import Timer from './_Timer.svelte';
@@ -74,6 +74,10 @@
 
         if ($prose_style != undefined) {
             t_text += ` The generated prose style should be: ${$prose_style}.`;
+        }
+
+        if ($dialogue_era != undefined) {
+            t_text += ` The generated dialogue era should be: ${$dialogue_era}.`;
         }
 
         t_text += "))\n"

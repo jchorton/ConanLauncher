@@ -164,7 +164,9 @@ pub fn submit_actual_post(character_message: NewCharacterMessage) {
 
     character_message.insert_new_db().unwrap();
 
-    let post = character_message.message.replace("ChatGPT", "");
+    let post = character_message.message
+                .replace("ChatGPT", "")
+                .replace("”", "\"");
     
     for c in post.chars() {
 
