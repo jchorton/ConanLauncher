@@ -63,7 +63,13 @@
 
     function get_generate_text(): string {
 
-        let t_text = "((Generate /me from the content below.";
+        return "((Generate /me from the content below.))\n";
+
+    }
+
+    function get_end_generate_text(): string {
+
+        let t_text = "\n((";
         if ($chat_style != undefined) {
             t_text += ` The generated writing style should be: ${$chat_style}.`;
         }
@@ -80,7 +86,7 @@
             t_text += ` The generated dialogue era should be: ${$dialogue_era}.`;
         }
 
-        t_text += "))\n"
+        t_text += "))"
         return t_text;
 
     }
@@ -101,6 +107,7 @@
 
         t_text += get_generate_text();
         t_text += text;
+        t_text += get_end_generate_text();
 
         window.navigator.clipboard.writeText(t_text);
         text = "";
