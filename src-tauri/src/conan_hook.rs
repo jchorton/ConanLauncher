@@ -16,6 +16,7 @@ use windows::Win32::UI::WindowsAndMessaging::{
     WM_CHAR, GetForegroundWindow
 };
 
+use clipboard_win::{formats::Unicode, set_clipboard};
 use crate::database::character_message::NewCharacterMessage;
 
 lazy_static! {
@@ -28,6 +29,8 @@ const ENTER_KEY: usize = 0x0D;
 const ESC_KEY: usize   = 0x1B;
 const BACKSPACE_KEY: usize = 0x08;
 const A_KEY: usize     = 0x41;
+const V_KEY: usize     = 0x56;
+const CONTROL_KEY: usize = 0x11;
 const SHIFT_KEY: usize = 0x10;
 
 unsafe extern "system" fn enum_windows_proc(hwnd: HWND, param1: LPARAM) -> BOOL {
@@ -168,16 +171,10 @@ pub fn submit_actual_post(character_message: NewCharacterMessage) {
                 .replace("ChatGPT", "")
                 .replace("”", "\"");
     
-    for c in post.chars() {
-
-        if c == '\n' {
-            post_message(WM_KEYDOWN, SHIFT_KEY, 0);
-            post_message(WM_KEYDOWN, ENTER_KEY, 0);
-        } else {
-            post_message(WM_CHAR, c as usize, 4);
-        }
-
-    }
+    set_clipboard(Unicode, &post).unwrap();
+    post_message(WM_KEYDOWN, CONTROL_KEY, 0);
+    post_message(WM_KEYDOWN, V_KEY, 0);
+    post_message(WM_KEYDOWN, BACKSPACE_KEY, 0);
     post_message(WM_KEYDOWN, ENTER_KEY, 0);
 
 }
