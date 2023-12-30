@@ -25,13 +25,13 @@ lazy_static! {
     static ref TYPING_JOIN_HANDLE: Arc<Mutex<Option<JoinHandle<()>>>> = Arc::new(Mutex::new(None));
 }
 
-const ENTER_KEY: usize = 0x0D;
-const ESC_KEY: usize   = 0x1B;
+const ENTER_KEY: usize     = 0x0D;
+const ESC_KEY: usize       = 0x1B;
 const BACKSPACE_KEY: usize = 0x08;
-const A_KEY: usize     = 0x41;
-const V_KEY: usize     = 0x56;
+const A_KEY: usize       = 0x41;
+const V_KEY: usize       = 0x56;
 const CONTROL_KEY: usize = 0x11;
-const SHIFT_KEY: usize = 0x10;
+const SHIFT_KEY: usize   = 0x10;
 
 unsafe extern "system" fn enum_windows_proc(hwnd: HWND, param1: LPARAM) -> BOOL {
 

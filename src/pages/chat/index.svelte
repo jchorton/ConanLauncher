@@ -11,6 +11,7 @@
     
     import ChatContext from './_ChatContext.svelte';
     import { character_id, chat_style, verbosity, prose_style, text_chat_looping, dialogue_era } from './chat_store';
+    import { get_character } from '../../lib/characters';
     import { messages } from '../../lib/network';
     import Dropdowns from './_Dropdowns.svelte';
     import Timer from './_Timer.svelte';
@@ -63,7 +64,8 @@
 
     function get_generate_text(): string {
 
-        return "((Generate /me from the content below.))\n";
+        let character = get_character($character_id!);
+        return `((Generate /me for ${character!.name} using the content below.))\n`;
 
     }
 
@@ -71,11 +73,11 @@
 
         let t_text = "\n((";
         if ($chat_style != undefined) {
-            t_text += ` The generated writing style should be: ${$chat_style}.`;
+            t_text += ` The writing style should mimic: ${$chat_style}.`;
         }
 
         if ($verbosity != undefined) {
-            t_text += ` The generated verbosity should be: ${$verbosity}.`;
+            t_text += ` The /me should be ${$verbosity} in length.`;
         }
 
         if ($prose_style != undefined) {
@@ -83,7 +85,7 @@
         }
 
         if ($dialogue_era != undefined) {
-            t_text += ` The generated dialogue era should be: ${$dialogue_era}.`;
+            t_text += ` The dialogue in the /me, should STRICTLY be: ${$dialogue_era}.`;
         }
 
         t_text += "))"
@@ -92,6 +94,11 @@
     }
 
     function on_cut_with_context() {
+
+        if ($character_id == undefined) {
+            alert("Please select a character.");
+            return;
+        }
 
         let t_text = "";
         if ($messages.length > 0) {

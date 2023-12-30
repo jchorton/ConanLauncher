@@ -1,5 +1,5 @@
 
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
 
@@ -42,6 +42,14 @@ export function init_characters() {
 
         });
 
+    });
+
+}
+
+export function get_character(character_id: number): ICharacter | undefined {
+
+    return get(characters).find((character) => {
+        return character.character_id === character_id;
     });
 
 }
