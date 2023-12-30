@@ -12,8 +12,12 @@ use windows::Win32::UI::WindowsAndMessaging::{
     GetWindowThreadProcessId,
     GetWindowTextW,
     PostMessageW,
+    SendMessageW,
     WM_KEYDOWN,
-    WM_CHAR, GetForegroundWindow
+    WM_PASTE,
+    WM_CHAR, 
+    GetForegroundWindow, 
+    WM_KEYUP
 };
 
 use clipboard_win::{formats::Unicode, set_clipboard};
@@ -117,6 +121,23 @@ fn post_message(msg_type: u32, wparam: usize, millis: u64) {
 
 }
 
+fn send_message(msg_type: u32, wparam: usize, millis: u64) {
+
+    let wparam = WPARAM(wparam);
+
+    if let Some(hwnd) = CONAN_SANDBOX_HWND.lock().unwrap().as_ref() {
+
+        unsafe {
+            let _ = SendMessageW(*hwnd, msg_type, wparam, LPARAM(0));
+        }
+        if millis > 0 {
+            thread::sleep(Duration::from_millis(millis));
+        }
+
+    }
+
+}
+
 fn window_in_focus() -> bool {
 
     if let Some(hwnd) = CONAN_SANDBOX_HWND.lock().unwrap().as_ref() {
@@ -172,9 +193,13 @@ pub fn submit_actual_post(character_message: NewCharacterMessage) {
                 .replace("”", "\"");
     
     set_clipboard(Unicode, &post).unwrap();
-    post_message(WM_KEYDOWN, CONTROL_KEY, 0);
-    post_message(WM_KEYDOWN, V_KEY, 0);
-    post_message(WM_KEYDOWN, BACKSPACE_KEY, 0);
+
+    send_message(WM_KEYDOWN, CONTROL_KEY, 50);
+    send_message(WM_KEYDOWN, V_KEY, 50);
+
+    send_message(WM_KEYUP, CONTROL_KEY, 5);
+    send_message(WM_KEYUP, V_KEY, 5);
+
     post_message(WM_KEYDOWN, ENTER_KEY, 0);
 
 }
