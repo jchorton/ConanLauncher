@@ -57,6 +57,8 @@
 
         let t_text = get_generate_text();
         t_text += text;
+        t_text += get_end_generate_text();
+
         window.navigator.clipboard.writeText(t_text);
         text = "";
         
@@ -88,6 +90,8 @@
             t_text += ` The dialogue in the /me, should STRICTLY be: ${$dialogue_era}.`;
         }
 
+        t_text += ` Do not assume details unless I explicitly provide you that information. Avoid making assumptions about relationships between characters or other unstated details.`;
+
         t_text += "))"
         return t_text;
 
@@ -103,7 +107,7 @@
         let t_text = "";
         if ($messages.length > 0) {
 
-            t_text += "((Context))\n"
+            t_text += "((Context provided by other characters))\n"
             $messages.forEach((message) => {
                 t_text += `${message.sender}: ${message.message}\n`;
             });
