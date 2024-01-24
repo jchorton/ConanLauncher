@@ -2,6 +2,7 @@
 use iron::prelude::*;
 use iron::status;
 use router::Router;
+use std::sync::atomic::AtomicBool;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
@@ -12,7 +13,9 @@ use crate::database::message::{NewMessage, Message};
 
 lazy_static! {
     static ref MESSAGE_QUEUE: Arc<Mutex<Vec<NewMessage>>> = Arc::new(Mutex::new(Vec::new()));
+    static ref TEXT_USER: Arc<AtomicBool> = Arc::new(AtomicBool::new(false));
 }
+
 
 #[tauri::command]
 pub fn start_webserver(window: tauri::Window) {

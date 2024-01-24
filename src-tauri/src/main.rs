@@ -11,6 +11,7 @@ mod conan_launch_settings;
 mod database;
 mod utils;
 mod webhook;
+mod texting;
 
 #[macro_use] extern crate lazy_static;
 extern crate iron;
@@ -34,6 +35,7 @@ fn main() {
             database::character::add_character,
             database::character::delete_character,
             webhook::start_webserver,
+            texting::set_text_user
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
