@@ -8,7 +8,7 @@ fn is_steam_launched() -> bool {
     let mut sys = System::new_all();
     sys.refresh_all();
 
-    for (pid, proc) in sys.processes() {
+    for (_pid, proc) in sys.processes() {
 
         if proc.name() == "steam.exe" {
             return true;
