@@ -22,6 +22,8 @@ tauri = { version = "1.5.2", features = [ "window-close", "window-set-minimizabl
 lazy_static = "1.4.0"
 rusqlite = { version = "0.30", features = [ "bundled", "chrono" ] }
 chrono =  { version = "0.4", features = ["serde"] }
+registry = "1.2.3"
+sysinfo = "0.30"
 
 iron = "0.6"
 router = "0.6.0"
@@ -35,7 +37,7 @@ lettre = "0.11.3"
 age = "0.9.2"
 
 
-windows = { version = "0.52", features = ["Data_Xml_Dom", "Win32_Foundation", "Win32_Security", "Win32_System_Threading", "Win32_UI_WindowsAndMessaging", "Win32_UI_Input_KeyboardAndMouse"] }
+windows = { version = "0.52", features = ["Data_Xml_Dom", "Win32_Foundation", "Win32_Security", "Win32_System_Threading", "Win32_System_LibraryLoader", "Win32_UI_WindowsAndMessaging", "Win32_UI_Input_KeyboardAndMouse", "Win32_System_ProcessStatus"] }
 
 
 em-libs = { git = "https://github.com/Davenport-Physics/EmLibs.git", branch = "master" }

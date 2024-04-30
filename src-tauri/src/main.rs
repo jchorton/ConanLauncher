@@ -12,6 +12,7 @@ mod database;
 mod utils;
 mod webhook;
 mod texting;
+mod steam_check;
 
 #[macro_use] extern crate lazy_static;
 extern crate iron;
@@ -20,6 +21,7 @@ extern crate router;
 fn main() {
     
     database::init().unwrap();
+    steam_check::launch_steam();
 
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
