@@ -8,6 +8,8 @@ pub mod character;
 pub mod message;
 pub mod character_message;
 
+const TABLES: &str = include_str!("../sql/tables.sql");
+
 pub fn connection() -> Result<Connection> {
 
     let em_dirs = utils::get_em_dirs();
@@ -19,10 +21,7 @@ pub fn connection() -> Result<Connection> {
 pub fn init() -> Result<()> {
 
     let conn = connection()?;
-    let sql = fs::read_to_string("./sql/tables.sql")
-        .expect("Failed to read SQL file");
-
-    conn.execute_batch(&sql)?;
+    conn.execute_batch(TABLES)?;
     Ok(())
 
 }
