@@ -24,6 +24,7 @@ rusqlite = { version = "0.30", features = [ "bundled", "chrono" ] }
 chrono =  { version = "0.4", features = ["serde"] }
 registry = "1.2.3"
 sysinfo = "0.30"
+steamlocate = "1.2.1"
 
 iron = "0.6"
 router = "0.6.0"

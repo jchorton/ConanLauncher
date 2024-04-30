@@ -17,6 +17,7 @@ mod steam_check;
 #[macro_use] extern crate lazy_static;
 extern crate iron;
 extern crate router;
+extern crate steamlocate;
 
 fn main() {
     
@@ -54,7 +55,8 @@ fn get_launcher_settings() -> Option<LauncherSettings> {
         }
 
     }
-    None
+
+    return LauncherSettings::from_steam_locate();
 
 }
 

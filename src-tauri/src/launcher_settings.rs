@@ -1,6 +1,6 @@
 
 use std::{fs, path::Path};
-
+use steamlocate::SteamDir;
 use em_libs::dal::em_dirs::EmDirs;
 use serde::{Deserialize, Serialize};
 
@@ -37,6 +37,19 @@ impl LauncherSettings {
                 return None;
             }
 
+        }
+
+    }
+
+    pub fn from_steam_locate() -> Option<LauncherSettings> {
+
+        const CONAN_EXILES_APP_ID: u32 = 440900;
+        
+        let mut steam_dir = SteamDir::locate().unwrap();
+        
+        match steam_dir.app(&CONAN_EXILES_APP_ID) { 
+            Some(app) => Some(LauncherSettings::new(app.path.to_str().unwrap().to_string())),
+            None => None
         }
 
     }
