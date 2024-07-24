@@ -1,7 +1,9 @@
-
-<script lang="ts">
-    import Background from '../assets/Background.png'
-</script>
-
-<img src={Background} class="absolute inset-0 w-full h-full object-cover z-0" alt="Background" />
-<slot></slot>
+<div class="flex flex-col min-h-screen bg-cover bg-no-repeat background-img">
+    <slot></slot>
+  </div>
+  
+  <style>
+      .background-img {
+          background-image: url("../assets//Background.png");
+      }
+  </style>
